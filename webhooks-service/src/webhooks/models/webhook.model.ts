@@ -18,5 +18,12 @@ export class WebhookModel extends Model<WebhookModel> {
     url: string;
 
     @BelongsToMany(() => EventTypeModel, () => WebhookEventTypeModel)
-    eventTypes: EventTypeModel[]
+    eventTypes?: EventTypeModel[]
+
+
+    public getEventTypes() : string[] {
+        return this.eventTypes.map(
+            (evenType)=>evenType.name
+        );
+    }
 }
