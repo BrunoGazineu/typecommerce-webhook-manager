@@ -1,26 +1,35 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateWebhookDto } from './dto/create-webhook.dto';
 import { UpdateWebhookDto } from './dto/update-webhook.dto';
+import { Webhook } from './entities/webhook.entity';
+import { IRepository } from 'src/shared/repositories/repository-interface';
 
 @Injectable()
 export class WebhooksService {
-  create(createWebhookDto: CreateWebhookDto) {
-    return 'This action adds a new webhook';
+  constructor(
+    @Inject("WebhookRepository")
+    private readonly webhookRepository: IRepository<Webhook>
+  ) {}
+  
+  async create(createWebhookDto: CreateWebhookDto) {
+    const webhook = await this.webhookRepository.create(createWebhookDto);
+    return webhook;
   }
 
-  findAll() {
-    return `This action returns all webhooks`;
+  async findAll() {
+    return await this.webhookRepository.findAll();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} webhook`;
+  async findOne(id: number) {
+    return await this.webhookRepository.findById(id);
   }
 
-  update(id: number, updateWebhookDto: UpdateWebhookDto) {
-    return `This action updates a #${id} webhook`;
+  async update(id: number, updateWebhookDto: UpdateWebhookDto) {
+    const webhook = await this.webhookRepository.update(id, updateWebhookDto);
+    return webhook;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} webhook`;
+  async remove(id: number) {
+    return this.webhookRepository.delete(id);
   }
 }

@@ -4,7 +4,7 @@ import { InjectModel } from "@nestjs/sequelize";
 import { WebhookModel } from "../models/webhook.model";
 import { EventTypeModel } from "src/event-types/models/event-type.model";
 
-export class EventTypeSequelizeRespository implements IRepository<Webhook> {
+export class WebhookSequelizeRespository implements IRepository<Webhook> {
     constructor(
         @InjectModel(WebhookModel)
         private readonly webhookModel: typeof WebhookModel,
@@ -20,7 +20,7 @@ export class EventTypeSequelizeRespository implements IRepository<Webhook> {
                     webhook.id,
                     webhook.name,
                     webhook.url,
-                    webhook.getEventTypes()
+                    webhook.getEventTypesSerialized()
                 )
             )
         );
@@ -30,14 +30,14 @@ export class EventTypeSequelizeRespository implements IRepository<Webhook> {
         if (!webhook)
             throw Error("Webhook not found")
 
-        return new Webhook(webhook.id, webhook.name, webhook.url, webhook.getEventTypes());
+        return new Webhook(webhook.id, webhook.name, webhook.url, webhook.getEventTypesSerialized());
     }
     async create(data: Partial<Webhook>): Promise<Webhook> {
         const {eventTypes, ...webhookData} = data;
         const existingEventTypes = await this.eventTypeModel.findAll({ where: { name: eventTypes } });
 
         if (existingEventTypes.length !== eventTypes.length) {
-            const nonExistingEventTypes = eventTypes.filter(name => existingEventTypes.some(eventType => eventType.name === name));
+            const nonExistingEventTypes = eventTypes.filter(name => !existingEventTypes.some(eventType => eventType.name === name));
             throw new Error(`The following EventTypes do not exist: ${nonExistingEventTypes.join(", ")}`);
         }
 
@@ -45,7 +45,9 @@ export class EventTypeSequelizeRespository implements IRepository<Webhook> {
 
         await webhook.$set('eventTypes', existingEventTypes);
 
-        return new Webhook(webhook.id, webhook.name, webhook.url, webhook.getEventTypes());
+        webhook.eventTypes = await webhook.$get("eventTypes")
+
+        return new Webhook(webhook.id, webhook.name, webhook.url, webhook.getEventTypesSerialized());
     }
     async update(id: number, data: Partial<Webhook>): Promise<Webhook> {
         const webhook = await this.webhookModel.findByPk(id);
@@ -57,7 +59,7 @@ export class EventTypeSequelizeRespository implements IRepository<Webhook> {
         const existingEventTypes = await this.eventTypeModel.findAll({ where: { name: eventTypes } });
 
         if (existingEventTypes.length !== eventTypes.length) {
-            const nonExistingEventTypes = eventTypes.filter(name => existingEventTypes.some(eventType => eventType.name === name));
+            const nonExistingEventTypes = eventTypes.filter(name => !existingEventTypes.some(eventType => eventType.name === name));
             throw new Error(`The following EventTypes do not exist: ${nonExistingEventTypes.join(", ")}`);
         }
 
@@ -65,10 +67,11 @@ export class EventTypeSequelizeRespository implements IRepository<Webhook> {
 
         await webhook.save()
 
-        webhook.$remove("eventTypes", []); // TEMP
-        webhook.$set("eventTypes", existingEventTypes);
+        await webhook.$remove("eventTypes", []); // TEMP
+        await webhook.$set("eventTypes", existingEventTypes);
+        webhook.eventTypes = await webhook.$get("eventTypes");
         
-        return new Webhook(webhook.id, webhook.name, webhook.url, webhook.getEventTypes());
+        return new Webhook(webhook.id, webhook.name, webhook.url, webhook.getEventTypesSerialized());
     }
     async delete(id: number): Promise<boolean> {
         const webhook = await this.webhookModel.findByPk(id);

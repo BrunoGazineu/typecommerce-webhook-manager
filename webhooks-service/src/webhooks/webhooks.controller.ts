@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res } from '@nestjs/common';
 import { WebhooksService } from './webhooks.service';
 import { CreateWebhookDto } from './dto/create-webhook.dto';
 import { UpdateWebhookDto } from './dto/update-webhook.dto';
+import { Response } from 'express';
 
-@Controller('webhooks')
+@Controller('api/webhooks')
 export class WebhooksController {
   constructor(private readonly webhooksService: WebhooksService) {}
 
@@ -28,7 +29,8 @@ export class WebhooksController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.webhooksService.remove(+id);
+  remove(@Param('id') id: string, @Res() res: Response) {
+    if(this.webhooksService.remove(+id))
+      return res.status(204).send();
   }
 }

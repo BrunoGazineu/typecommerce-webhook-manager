@@ -1,1 +1,5 @@
-export class CreateWebhookDto {}
+export class CreateWebhookDto {
+    name: string
+    url: string
+    eventTypes: string[]
+}

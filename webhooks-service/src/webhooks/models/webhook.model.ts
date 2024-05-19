@@ -21,8 +21,8 @@ export class WebhookModel extends Model<WebhookModel> {
     eventTypes?: EventTypeModel[]
 
 
-    public getEventTypes() : string[] {
-        return this.eventTypes.map(
+    public getEventTypesSerialized() : string[] {
+        return (this.eventTypes || []).map(
             (evenType)=>evenType.name
         );
     }
