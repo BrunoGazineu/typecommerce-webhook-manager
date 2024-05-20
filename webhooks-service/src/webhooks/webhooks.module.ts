@@ -4,7 +4,7 @@ import { WebhooksController } from './webhooks.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { WebhookModel } from './models/webhook.model';
 import { WebhookEventTypeModel } from './models/webhook-event-type.model';
-import { WebhookSequelizeRespository } from './repositories/WebhookSequelizeRepository';
+import { WebhookSequelizeRespository } from './repositories/webhook-sequelize-repository';
 import { EventTypeModel } from 'src/event-types/models/event-type.model';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PublishWebhookCreatedListener } from './listeners/publish-webhook-created.listener';
