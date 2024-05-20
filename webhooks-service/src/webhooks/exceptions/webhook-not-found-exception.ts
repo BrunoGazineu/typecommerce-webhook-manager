@@ -1,4 +1,4 @@
-import { EntityNotFoundException } from "../../exceptions/entity-not-found-exceptions";
+import { EntityNotFoundException } from "../../shared/exceptions/entity-not-found-exceptions";
 
 export class WebhookNotFoundException extends EntityNotFoundException {
     constructor(id: number) {

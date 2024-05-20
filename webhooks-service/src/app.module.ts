@@ -26,6 +26,7 @@ import { WebhookEventTypeModel } from './webhooks/models/webhook-event-type.mode
     WebhooksModule,
     EventTypesModule
   ],
+  exports: [],
   controllers: [],
   providers: [],
 })

@@ -1,6 +1,7 @@
 import { Model, Column, Table, DataType, BelongsToMany } from "sequelize-typescript";
 import { WebhookEventTypeModel } from "./webhook-event-type.model";
 import { EventTypeModel } from "src/event-types/models/event-type.model";
+import { Webhook } from "../entities/webhook.entity";
 
 @Table({modelName: "Webhooks"})
 export class WebhookModel extends Model<WebhookModel> {
@@ -25,5 +26,9 @@ export class WebhookModel extends Model<WebhookModel> {
         return (this.eventTypes || []).map(
             (evenType)=>evenType.name
         );
+    }
+
+    toEntity(): Webhook {
+        return new Webhook(this.id, this.name, this.url, this.getEventTypesSerialized())
     }
 }
