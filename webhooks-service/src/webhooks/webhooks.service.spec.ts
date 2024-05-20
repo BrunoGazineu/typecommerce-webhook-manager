@@ -3,13 +3,17 @@ import { Webhook } from './entities/webhook.entity';
 import { RepositoryInMemory } from '../shared/repositories/repository-in-memory';
 import { WebhookNotFoundException } from './exceptions/webhook-not-found-exception';
 
+const eventEmitterMock = {
+  emit: jest.fn()
+}
+
 describe('WebhooksService', () => {
   let service: WebhooksService;
   let webhookRepository: RepositoryInMemory<Webhook>;
 
   beforeEach(async () => {
     webhookRepository = new RepositoryInMemory();
-    service = new WebhooksService(webhookRepository);
+    service = new WebhooksService(webhookRepository, eventEmitterMock as any);
   });
 
   it('Should create a webhook', async () => {

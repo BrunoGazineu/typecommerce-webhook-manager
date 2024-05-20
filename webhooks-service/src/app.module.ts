@@ -6,6 +6,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { WebhookModel } from './webhooks/models/webhook.model';
 import { EventTypeModel } from './event-types/models/event-type.model';
 import { WebhookEventTypeModel } from './webhooks/models/webhook-event-type.model';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { WebhookEventTypeModel } from './webhooks/models/webhook-event-type.mode
       isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV}`,
     }),
+    EventEmitterModule.forRoot(),
     SequelizeModule.forRoot({
       dialect: "postgres",
       host: process.env.DB_HOST,
@@ -21,6 +23,8 @@ import { WebhookEventTypeModel } from './webhooks/models/webhook-event-type.mode
       port: Number(process.env.DB_PORT),
       database: process.env.DB_NAME,
       models: [WebhookModel, EventTypeModel, WebhookEventTypeModel],
+      retryAttempts: 10,
+      retryDelay: 5,
       autoLoadModels: true // DEV ONLY
     }),
     WebhooksModule,
