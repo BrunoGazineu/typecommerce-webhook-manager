@@ -2,6 +2,7 @@ import { IRepository } from "src/shared/repositories/repository-interface";
 import { EventType } from "../entities/event-type.entity";
 import { EventTypeModel } from "../models/event-type.model";
 import { InjectModel } from "@nestjs/sequelize";
+import { EventTypeNotFoundException } from "../exceptions/event-type-not-found-exception";
 
 export class EventTypeSequelizeRespository implements IRepository<EventType> {
     constructor(
@@ -19,7 +20,7 @@ export class EventTypeSequelizeRespository implements IRepository<EventType> {
     async findById(id: number): Promise<EventType> {
         const eventType = await this.eventTypeModel.findByPk(id);
         if (!eventType)
-            throw new Error("EventType not found")
+            throw new EventTypeNotFoundException(id)
         
         return new EventType(eventType.id, eventType.name);
     }
