@@ -67,7 +67,7 @@ export class WebhookSequelizeRespository implements IRepository<Webhook> {
 
             await webhook.$remove("event_types", eventsTypesToRemove, {transaction});
             await webhook.$set("event_types", eventTypesToAdd, {transaction});
-            webhook.event_types = await webhook.$get("event_types");
+            webhook.event_types = await webhook.$get("event_types", {transaction});
 
             await transaction.commit();
 
