@@ -4,7 +4,7 @@ import { EventTypeModel } from "src/event-types/models/event-type.model";
 export function IsUnique(model: any, validationOptions?: ValidationOptions) {
     return function(object: Object, propertyName: string) {
         registerDecorator({
-            name: "isValidEventTypes",
+            name: "isUnique",
             target: object.constructor,
             propertyName: propertyName,
             validator: {
