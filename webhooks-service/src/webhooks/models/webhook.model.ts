@@ -19,11 +19,11 @@ export class WebhookModel extends Model<WebhookModel> {
     url: string;
 
     @BelongsToMany(() => EventTypeModel, () => WebhookEventTypeModel)
-    eventTypes?: EventTypeModel[]
+    event_types?: EventTypeModel[]
 
 
     public getEventTypesSerialized() : string[] {
-        return (this.eventTypes || []).map(
+        return (this.event_types || []).map(
             (evenType)=>evenType.name
         );
     }

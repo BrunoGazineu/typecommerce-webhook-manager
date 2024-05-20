@@ -8,7 +8,7 @@ import { IRepository } from 'src/shared/repositories/repository-interface';
 export class WebhooksService {
   constructor(
     @Inject("WebhookRepository")
-    private readonly webhookRepository: IRepository<Webhook>
+    private readonly webhookRepository: IRepository<Webhook>,
   ) {}
   
   async create(createWebhookDto: CreateWebhookDto) {

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { WebhooksService } from './webhooks.service';
 import { WebhooksController } from './webhooks.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
@@ -14,6 +14,7 @@ import { EventTypeModel } from 'src/event-types/models/event-type.model';
   controllers: [WebhooksController],
   providers: [
     WebhooksService,
+    Logger,
     WebhookSequelizeRespository,
     {
       provide: 'WebhookRepository',

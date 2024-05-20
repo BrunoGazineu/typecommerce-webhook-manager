@@ -1,12 +1,12 @@
 export class Webhook {
-    constructor(id: number, name: string, url: string, eventTypes: string[] = []) {
+    constructor(id: number, name: string, url: string, event_types: string[] = []) {
         this.id=id;
         this.name=name;
         this.url=url;
-        this.eventTypes=eventTypes;
+        this.event_types=event_types;
     }
     id: number
     name: string
     url: string
-    eventTypes: string[]
+    event_types: string[]
 }

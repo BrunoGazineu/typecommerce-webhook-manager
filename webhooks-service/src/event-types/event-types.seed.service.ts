@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, Logger } from "@nestjs/common";
 import { IRepository } from "src/shared/repositories/repository-interface";
 import { EventType } from "./entities/event-type.entity";
 
@@ -6,12 +6,15 @@ import { EventType } from "./entities/event-type.entity";
 export class EventTypeSeedService {
     constructor(
         @Inject("EventTypeRepository")
-        private eventTypeRepository: IRepository<EventType> 
+        private readonly eventTypeRepository: IRepository<EventType>,
+        private readonly logger: Logger
     ) {}
 
     async seedData() {
         const eventTypesCount = (await this.eventTypeRepository.findAll()).length;
         if (eventTypesCount === 0) {
+            this.logger.log("[EventTypes] No EventType Data found, seeding EventTypes Data")
+
             const success = await this.eventTypeRepository.createMany([
                 { name: "VIEW_ITEM" },
                 { name: "VIEW_ITEM_LIST" },
@@ -24,6 +27,8 @@ export class EventTypeSeedService {
                 { name: "ADD_SHIPPING_INFO" },
                 { name: "PURCHASE" }
             ])
+
+            this.logger.log("[EventTypes] EventTypes Data Seeded")
         }
     }
 }

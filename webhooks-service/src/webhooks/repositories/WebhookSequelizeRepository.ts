@@ -5,6 +5,7 @@ import { WebhookModel } from "../models/webhook.model";
 import { EventTypeModel } from "src/event-types/models/event-type.model";
 import { WebhookNotFoundException } from "../exceptions/webhook-not-found-exception";
 import { Sequelize } from 'sequelize-typescript';
+import { Logger } from "@nestjs/common";
 
 export class WebhookSequelizeRespository implements IRepository<Webhook> {
     constructor(
@@ -12,7 +13,8 @@ export class WebhookSequelizeRespository implements IRepository<Webhook> {
         private readonly webhookModel: typeof WebhookModel,
         @InjectModel(EventTypeModel)
         private readonly eventTypeModel: typeof EventTypeModel,
-        private readonly sequelize: Sequelize
+        private readonly sequelize: Sequelize,
+        private readonly logger: Logger
     ) {}
 
     async findAll(): Promise<Webhook[]> {
@@ -26,19 +28,20 @@ export class WebhookSequelizeRespository implements IRepository<Webhook> {
     async findById(id: number): Promise<Webhook> {
         const webhook = await this.webhookModel.findByPk(id, { include: EventTypeModel });
         if (!webhook)
-            throw new WebhookNotFoundException(id);
+            throw new WebhookNotFoundException(this.logger, id);
 
         return webhook.toEntity();
     }
     async create(data: Partial<Webhook>): Promise<Webhook> {
-        const {eventTypes, ...webhookData} = data;
-        const eventTypesModels = await this.eventTypeModel.findAll({ where: { name: eventTypes } });
+        const {event_types, ...webhookData} = data;
+
+        const eventTypesModels = await this.eventTypeModel.findAll({ where: { name: event_types } });
 
         const webhook = await this.webhookModel.create(webhookData);
 
-        await webhook.$set('eventTypes', eventTypesModels);
+        await webhook.$set('event_types', eventTypesModels);
 
-        webhook.eventTypes = await webhook.$get("eventTypes")
+        webhook.event_types = await webhook.$get("event_types")
 
         return webhook.toEntity();
     }
@@ -48,13 +51,13 @@ export class WebhookSequelizeRespository implements IRepository<Webhook> {
         try {
             const webhook = await this.webhookModel.findByPk(id, { include: EventTypeModel });
             if (!webhook)
-                throw new WebhookNotFoundException(id);
+                throw new WebhookNotFoundException(this.logger, id);
 
-            const {eventTypes, ...webhookData} = data;
+            const {event_types, ...webhookData} = data;
             
-            const newEventTypes = await this.eventTypeModel.findAll({ where: { name: eventTypes } });
+            const newEventTypes = await this.eventTypeModel.findAll({ where: { name: event_types } });
             
-            const currentEventTypesId = webhook.eventTypes.map(eventType => eventType.id);
+            const currentEventTypesId = webhook.event_types.map(eventType => eventType.id);
             const newEventTypesId = newEventTypes.map(eventType => eventType.id);
 
             const eventsTypesToRemove = currentEventTypesId.filter(id => !newEventTypesId.includes(id));
@@ -62,9 +65,9 @@ export class WebhookSequelizeRespository implements IRepository<Webhook> {
 
             await webhook.update(webhookData, {transaction});
 
-            await webhook.$remove("eventTypes", eventsTypesToRemove, {transaction});
-            await webhook.$set("eventTypes", eventTypesToAdd, {transaction});
-            webhook.eventTypes = await webhook.$get("eventTypes");
+            await webhook.$remove("event_types", eventsTypesToRemove, {transaction});
+            await webhook.$set("event_types", eventTypesToAdd, {transaction});
+            webhook.event_types = await webhook.$get("event_types");
 
             await transaction.commit();
 
@@ -77,7 +80,7 @@ export class WebhookSequelizeRespository implements IRepository<Webhook> {
     async delete(id: number): Promise<boolean> {
         const webhook = await this.webhookModel.findByPk(id);
         if (!webhook)
-            throw new WebhookNotFoundException(id);
+            throw new WebhookNotFoundException(this.logger, id);
         
         await webhook.destroy();
         return true;

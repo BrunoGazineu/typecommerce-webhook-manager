@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { IRepository } from "./repository-interface";
 import { WebhookNotFoundException } from "../../webhooks/exceptions/webhook-not-found-exception";
 
@@ -12,7 +12,7 @@ export class RepositoryInMemory<T> implements IRepository<T> {
     async findById(id: number): Promise<T> {
         const item = this.items.find((item: any)=> item.id === id)
         if (!item)
-            throw new WebhookNotFoundException(id);
+            throw new WebhookNotFoundException(console as any, id);
 
         return item;
     }
@@ -36,7 +36,7 @@ export class RepositoryInMemory<T> implements IRepository<T> {
     async delete(id: number): Promise<boolean> {
         const index = this.items.findIndex((item: any) => item.id === id);
         if (index === -1)
-            throw new Error("O item não existe");
+            throw new WebhookNotFoundException(console as any, id);
 
         this.items.splice(index, 1);
         return true;

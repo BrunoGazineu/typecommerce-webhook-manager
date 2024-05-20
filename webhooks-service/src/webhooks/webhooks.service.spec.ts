@@ -16,7 +16,7 @@ describe('WebhooksService', () => {
     const webhookData = {
       url: "www.test.com",
       name: "Test Webhook",
-      eventTypes: ["TEST_EVENT"]
+      event_types: ["TEST_EVENT"]
     }
 
     const webhook = await service.create({
@@ -51,10 +51,10 @@ describe('WebhooksService', () => {
   it('Should update a webhook by id', async () => {
     webhookRepository.items.push(createTestWebhook());
 
-    const updateData = {name: "TEST_WEBHOOK_2", url: "www.test_2.com", eventTypes: ["TEST_EVENT", "TEST_EVENT_2"]};
+    const updateData = {name: "TEST_WEBHOOK_2", url: "www.test_2.com", event_types: ["TEST_EVENT", "TEST_EVENT_2"]};
     const webhook = await service.update(1, updateData);
 
-    expect(webhook).toEqual(new Webhook(1, updateData.name, updateData.url, updateData.eventTypes));
+    expect(webhook).toEqual(new Webhook(1, updateData.name, updateData.url, updateData.event_types));
   });
 
   it('Should delete a webhook by id', async () => {
