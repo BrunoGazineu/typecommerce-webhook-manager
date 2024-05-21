@@ -24,7 +24,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
       database: process.env.DB_NAME,
       models: [WebhookModel, EventTypeModel, WebhookEventTypeModel],
       retryAttempts: 10,
-      retryDelay: 5,
+      retryDelay: 1000,
       autoLoadModels: true // DEV ONLY
     }),
     WebhooksModule,

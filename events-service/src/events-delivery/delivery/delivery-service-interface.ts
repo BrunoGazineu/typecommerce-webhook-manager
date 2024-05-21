@@ -5,6 +5,6 @@ export interface DeliveryResponse {
     error?: any 
 }
 
-export interface IDelivery {
+export interface IDeliveryService {
     deliver(webhookEvent: WebhookEvent) : Promise<DeliveryResponse>;
 } 

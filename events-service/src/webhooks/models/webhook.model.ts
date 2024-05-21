@@ -17,10 +17,6 @@ export class WebhookModel {
 
     @Prop([String])
     event_types: string[]
-
-    toEntity() : Webhook {
-        return new Webhook(this.id, this.name, this.url, this.event_types);
-    }
 }
 
 export const WebhookSchema = SchemaFactory.createForClass(WebhookModel);

@@ -32,18 +32,18 @@ export class WebhookMongooseGateway implements IWebhookGateway {
         if (!webhook)
             throw new Error("No webhook was found with id: " + webhook.id);
         
-        return webhook.toEntity()
+        return this.modelToEntity(webhook);
     }
     async findAllByEventType(event_type: string): Promise<Webhook[]> {
         const webhooks = await this.webhookModel.find({event_types: { $in: [event_type] }})
         return webhooks.map(
-            webhook => webhook.toEntity()
+            webhook => this.modelToEntity(webhook)
         );
     }
     async findAll(): Promise<Webhook[]> {
         const webhooks = await this.webhookModel.find();
         return webhooks.map(
-            webhooks => webhooks.toEntity()
+            webhook => this.modelToEntity(webhook)
         )
     }
     async deleteById(id: number): Promise<boolean> {
@@ -52,5 +52,9 @@ export class WebhookMongooseGateway implements IWebhookGateway {
             return true
 
         throw new Error("No webhook was found with id: " + id);
+    }
+
+    private modelToEntity(model: WebhookModel) : Webhook {
+        return new Webhook(model.id, model.name, model.url, model.event_types);
     }
 }
