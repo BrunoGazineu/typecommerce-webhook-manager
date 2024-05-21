@@ -16,7 +16,6 @@ export class WebhookGRPCGateway implements IWebhookGateway {
     async findAll(): Promise<Webhook[]> {
         const response: Observable<{webhooks: {id: number, name: string, url: string, eventTypes: string[]}[]}> = await this.webhooksService.GetAllWebhooks({})
         const {webhooks} = await firstValueFrom(response);
-        console.log(webhooks)
         return webhooks.map((webhook) => {
             const {id, name, url, eventTypes} = webhook;
             return new Webhook(id, name, url, eventTypes);

@@ -12,8 +12,6 @@ async function bootstrap() {
   });
   app.useGlobalPipes(new ValidationPipe());
 
-  console.log(join(__dirname, 'webhooks/protos/webhooks.proto'))
-
   const grpcMicroservice = app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.GRPC,
     options: {

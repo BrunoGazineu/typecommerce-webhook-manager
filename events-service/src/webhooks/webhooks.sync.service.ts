@@ -14,7 +14,6 @@ export class WebhooksSyncService {
     async getWebhooks() {
         this.logger.log("[Webhooks] GRPC Get All");
         const webhooks = await this.webhookHttpGateway.findAll();
-        console.log(webhooks)
         this.webhookPersistentGateway.createMany(webhooks);
     }
 }
