@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { loggerLevel } from './config/logger-config';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { WebhooksSyncService } from './webhooks/webhooks.sync.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -14,6 +15,10 @@ async function bootstrap() {
       queue: 'webhook-queue',
     }
   })
+  
+  const webhooksSyncService = app.get(WebhooksSyncService);
+  await webhooksSyncService.getWebhooks();
+
   await app.startAllMicroservices();
   await app.listen(7001);
 }

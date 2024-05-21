@@ -40,6 +40,12 @@ export class WebhookMongooseGateway implements IWebhookGateway {
             webhook => webhook.toEntity()
         );
     }
+    async findAll(): Promise<Webhook[]> {
+        const webhooks = await this.webhookModel.find();
+        return webhooks.map(
+            webhooks => webhooks.toEntity()
+        )
+    }
     async deleteById(id: number): Promise<boolean> {
         const result = await this.webhookModel.deleteOne({id: id});
         if (result.deletedCount === 1)

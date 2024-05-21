@@ -5,6 +5,7 @@ export interface IWebhookGateway {
     update(webhook: Webhook) : Promise<boolean>;
     createMany(webhooks: Webhook[]) : Promise<boolean>;
     findById(id: string) : Promise<Webhook>;
+    findAll(): Promise<Webhook[]>;
     findAllByEventType(event_type: string) : Promise<Webhook[]>;
     deleteById(id: number) : Promise<boolean>;
 }

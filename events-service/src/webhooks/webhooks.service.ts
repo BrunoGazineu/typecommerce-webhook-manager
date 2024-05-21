@@ -5,7 +5,7 @@ import { IWebhookGateway } from './gateways/webhook-gateway-interface';
 @Injectable()
 export class WebhooksService {
     constructor(
-        @Inject("WebhookGateway")
+        @Inject("WebhookPersistentGateway")
         private readonly webhookGateway: IWebhookGateway
     ) {}
     

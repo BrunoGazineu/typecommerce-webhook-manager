@@ -3,6 +3,7 @@ import { WebhooksService } from './webhooks.service';
 import { CreateWebhookDto } from './dto/create-webhook.dto';
 import { UpdateWebhookDto } from './dto/update-webhook.dto';
 import { Response } from 'express';
+import { GrpcMethod } from '@nestjs/microservices';
 
 @Controller('api/webhooks')
 export class WebhooksController {
@@ -41,4 +42,21 @@ export class WebhooksController {
     if(this.webhooksService.remove(+id))
       return res.status(204).send();
   }
+
+  @GrpcMethod('WebhooksService', 'GetAllWebhooks')
+  async gRpcFindAll() {
+    this.logger.log("[WebhookController] gRPC FindAll");
+    // const webhooks = await this.webhooksService.findAll()
+    const webhooks = [
+      {
+        id: 18,
+        name: 'test',
+        url: 'www.test.com',
+        event_types: 'VIEW_ITEM'
+      }
+    ]
+    console.log(webhooks)
+    return {webhooks};
+  }
+
 }
