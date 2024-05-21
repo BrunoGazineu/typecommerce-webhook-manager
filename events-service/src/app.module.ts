@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { EventsModule } from './events/events.module';
+import { EventsDeliveryModule } from './events-delivery/events-delivery.module';
 import { WebhooksModule } from './webhooks/webhooks.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
@@ -11,7 +11,7 @@ import { ConfigModule } from '@nestjs/config';
       envFilePath: `.env.${process.env.NODE_ENV}`,
     }),
     MongooseModule.forRoot(process.env.MONGO_CONNECTION),
-    EventsModule,
+    EventsDeliveryModule,
     WebhooksModule
   ],
   controllers: [],

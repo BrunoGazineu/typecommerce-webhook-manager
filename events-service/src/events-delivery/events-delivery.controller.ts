@@ -1,10 +1,10 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { EventsService } from './events.service';
+import { EventsDeliveryService } from './events-delivery.service';
 import { SendEventDto } from './dto/send-event.dto';
 
 @Controller('api/events')
-export class EventsController {
-  constructor(private readonly eventsService: EventsService) {}
+export class EventsDeliveryController {
+  constructor(private readonly eventsService: EventsDeliveryService) {}
 
   @Post()
   send(@Body() sendEventDto: SendEventDto) {

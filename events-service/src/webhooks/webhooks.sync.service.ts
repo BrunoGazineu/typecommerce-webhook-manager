@@ -12,8 +12,12 @@ export class WebhooksSyncService {
     ) {}
 
     async getWebhooks() {
-        this.logger.log("[Webhooks] GRPC Get All");
-        const webhooks = await this.webhookHttpGateway.findAll();
-        this.webhookPersistentGateway.createMany(webhooks);
+        const count = (await this.webhookPersistentGateway.findAll()).length
+        if (count === 0) {
+            this.logger.log("[Webhooks] No Webhook found, getting webhooks using GRPC");
+            const webhooks = await this.webhookHttpGateway.findAll();
+            await this.webhookPersistentGateway.createMany(webhooks);
+            this.logger.log("[Webhooks] Webhooks retrieved")
+        }
     }
 }
