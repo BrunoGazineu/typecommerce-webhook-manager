@@ -10,7 +10,7 @@ message Webhook {
     int32 id = 1;
     string name = 2;
     string url = 3;
-    repeated string event_types = 4;
+    repeated string eventTypes = 4;
 }
 
 message GetAllWebhooksRequest {}

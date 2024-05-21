@@ -46,17 +46,11 @@ export class WebhooksController {
   @GrpcMethod('WebhooksService', 'GetAllWebhooks')
   async gRpcFindAll() {
     this.logger.log("[WebhookController] gRPC FindAll");
-    // const webhooks = await this.webhooksService.findAll()
-    const webhooks = [
-      {
-        id: 18,
-        name: 'test',
-        url: 'www.test.com',
-        event_types: 'VIEW_ITEM'
-      }
-    ]
-    console.log(webhooks)
-    return {webhooks};
+    const webhooks = await this.webhooksService.findAll()
+    return {webhooks: webhooks.map(webhook => {
+      const {event_types, ...props} = webhook;
+      return {...props, eventTypes: event_types}
+    })};
   }
 
 }

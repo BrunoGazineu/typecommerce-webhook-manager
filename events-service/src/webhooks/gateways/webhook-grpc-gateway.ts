@@ -14,8 +14,13 @@ export class WebhookGRPCGateway implements IWebhookGateway {
         this.webhooksService = this.grpcClient.getService("WebhooksService");
     }
     async findAll(): Promise<Webhook[]> {
-        const webhooks: Observable<Webhook[]> = await this.webhooksService.GetAllWebhooks({})
-        return firstValueFrom(webhooks);
+        const response: Observable<{webhooks: {id: number, name: string, url: string, eventTypes: string[]}[]}> = await this.webhooksService.GetAllWebhooks({})
+        const {webhooks} = await firstValueFrom(response);
+        console.log(webhooks)
+        return webhooks.map((webhook) => {
+            const {id, name, url, eventTypes} = webhook;
+            return new Webhook(id, name, url, eventTypes);
+        })
     }
     create(webhook: Webhook): Promise<boolean> {
         throw new Error("Method not implemented.");
