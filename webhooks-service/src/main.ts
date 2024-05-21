@@ -5,6 +5,7 @@ import { loggerLevel } from './config/logger-config';
 import { ValidationPipe } from '@nestjs/common';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
+import { WebhooksSeedService } from './webhooks/webhooks.seed.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -23,6 +24,9 @@ async function bootstrap() {
 
   const eventTypeSeedService = app.get(EventTypeSeedService);
   await eventTypeSeedService.seedData();
+
+  const webhooksSeedService = app.get(WebhooksSeedService);
+  webhooksSeedService.seedData();
 
   await app.startAllMicroservices();
   await app.listen(process.env.APP_PORT);

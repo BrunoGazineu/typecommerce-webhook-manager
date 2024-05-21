@@ -1,9 +1,10 @@
 import { Inject, Injectable, Logger } from "@nestjs/common";
 import { IRepository } from "src/shared/repositories/repository-interface";
 import { EventType } from "./entities/event-type.entity";
+import { SeedService } from "src/shared/services/seed-service-interface";
 
 @Injectable()
-export class EventTypeSeedService {
+export class EventTypeSeedService implements SeedService {
     constructor(
         @Inject("EventTypeRepository")
         private readonly eventTypeRepository: IRepository<EventType>,

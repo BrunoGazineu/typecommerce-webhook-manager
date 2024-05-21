@@ -11,6 +11,7 @@ import { PublishWebhookCreatedListener } from './listeners/publish-webhook-creat
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { PublishWebhookUpdatedListener } from './listeners/publish-webhook-updated.listener';
 import { PublishWebhookDeletedListener } from './listeners/publish-webhook-deleted.listener';
+import { WebhooksSeedService } from './webhooks.seed.service';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { PublishWebhookDeletedListener } from './listeners/publish-webhook-delet
   controllers: [WebhooksController],
   providers: [
     WebhooksService,
+    WebhooksSeedService,
     Logger,
     PublishWebhookCreatedListener,
     PublishWebhookUpdatedListener,

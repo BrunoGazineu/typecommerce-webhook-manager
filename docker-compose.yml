@@ -7,8 +7,6 @@ services:
       - POSTGRES_PASSWORD=123456
     ports:
       - 5432:5432
-    volumes:
-      - webhook-manager-pgdata:/var/lib/postgresql/data
 
   mongodb:
     image: mongo
@@ -17,15 +15,9 @@ services:
      - MONGO_INITDB_ROOT_PASSWORD=root
     ports:
       - 27017:27017
-    volumes:
-      - webhook-manager-mongodata:/var/lib/mongodb/data
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
     ports:
       - 5672:5672
       - 15672:15672
-
-volumes:
-  webhook-manager-pgdata:
-  webhook-manager-mongodata:
