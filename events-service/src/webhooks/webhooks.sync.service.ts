@@ -1,13 +1,13 @@
 import { Inject, Injectable, Logger } from "@nestjs/common";
-import { ClientGrpc, ClientProxy } from "@nestjs/microservices";
-import { IWebhookGateway } from "./gateways/webhook-gateway-interface";
+import { IGateway } from "src/shared/gateways/gateway-interface";
+import { Webhook } from "./entities/webhook.entity";
 @Injectable()
 export class WebhooksSyncService {
     constructor(
         @Inject("WebhookHttpGateway")
-        private readonly webhookHttpGateway: IWebhookGateway,
+        private readonly webhookHttpGateway: IGateway<Webhook>,
         @Inject("WebhookPersistentGateway")
-        private readonly webhookPersistentGateway: IWebhookGateway,
+        private readonly webhookPersistentGateway: IGateway<Webhook>,
         private readonly logger: Logger
     ) {}
 

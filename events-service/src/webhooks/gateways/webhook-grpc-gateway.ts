@@ -1,11 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { IWebhookGateway } from "./webhook-gateway-interface";
 import { Webhook } from "../entities/webhook.entity";
 import { ClientGrpc } from "@nestjs/microservices";
 import { firstValueFrom, Observable } from "rxjs";
+import { IGateway } from "src/shared/gateways/gateway-interface";
 
 @Injectable()
-export class WebhookGRPCGateway implements IWebhookGateway {
+export class WebhookGRPCGateway implements IGateway<Webhook> {
     private webhooksService;
     constructor(
         @Inject("WEBHOOKS_SERVICE")

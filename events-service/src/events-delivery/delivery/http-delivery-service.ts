@@ -4,6 +4,7 @@ import { DeliveryResponse, IDeliveryService } from "./delivery-service-interface
 import { catchError, firstValueFrom } from "rxjs";
 import { HttpException, Injectable, Logger } from "@nestjs/common";
 import { AxiosError } from "axios";
+import * as HttpClient from "@effect/platform/HttpClient"
 
 @Injectable()
 export class HttpDeliveryService implements IDeliveryService {
@@ -13,9 +14,6 @@ export class HttpDeliveryService implements IDeliveryService {
     ) {}
 
     async deliver(webhookEvent: WebhookEvent): Promise<DeliveryResponse> {
-        console.log(webhookEvent.url)
-        if (webhookEvent.url == "localhost:7002/analytics") return {success: true}
-
         const {url, ...data} = webhookEvent;
         const serviceObservable = this.httpService.post(webhookEvent.url, {...data})
             .pipe(

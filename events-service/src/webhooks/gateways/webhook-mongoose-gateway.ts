@@ -1,10 +1,12 @@
 import { InjectModel } from "@nestjs/mongoose";
 import { Webhook } from "../entities/webhook.entity";
-import { IWebhookGateway } from "./webhook-gateway-interface";
 import { WebhookModel } from "../models/webhook.model";
 import { Model } from "mongoose";
+import { IGateway } from "src/shared/gateways/gateway-interface";
+import { Injectable } from "@nestjs/common";
 
-export class WebhookMongooseGateway implements IWebhookGateway {
+@Injectable()
+export class WebhookMongooseGateway implements IGateway<Webhook> {
     constructor(
         @InjectModel(WebhookModel.name)
         private webhookModel: Model<WebhookModel>

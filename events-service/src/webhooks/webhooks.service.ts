@@ -1,12 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Webhook } from './entities/webhook.entity';
-import { IWebhookGateway } from './gateways/webhook-gateway-interface';
+import { IGateway } from 'src/shared/gateways/gateway-interface';
 
 @Injectable()
 export class WebhooksService {
     constructor(
         @Inject("WebhookPersistentGateway")
-        private readonly webhookGateway: IWebhookGateway
+        private readonly webhookGateway: IGateway<Webhook>
     ) {}
     
     async create(webhook: Webhook) {

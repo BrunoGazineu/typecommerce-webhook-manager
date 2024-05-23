@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument } from "mongoose";
-import { Webhook } from "../entities/webhook.entity";
 
 export type WebhookDocument = HydratedDocument<WebhookModel>
 
