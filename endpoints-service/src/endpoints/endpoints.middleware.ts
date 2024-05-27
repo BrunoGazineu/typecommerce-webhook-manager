@@ -16,6 +16,7 @@ export class EndpointMiddleware implements NestMiddleware {
     ) {}
 
     async use(req: Request, res: Response, next: NextFunction) {
+        console.log("Middleware")
         if (req.method !== "POST") return res.status(404).send("Method not valid");
 
         const url = req.originalUrl;

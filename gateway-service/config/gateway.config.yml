@@ -1,0 +1,22 @@
+http:
+  port: 8080
+apiEndpoints:
+  endpoints:
+    host: '*'
+    paths: '/*'
+    methods: ['POST', 'GET', 'PATCH', 'DELETE']
+
+serviceEndpoints:
+  endpoints-service:
+    url: 'http://endpoints-svc:7003/'
+policies:
+  - proxy
+pipelines:
+  endpoints-pipeline:
+    apiEndpoints:
+      - endpoints
+    policies:
+      - proxy:
+          - action:
+              serviceEndpoint: endpoints-service
+              changeOrigin: true

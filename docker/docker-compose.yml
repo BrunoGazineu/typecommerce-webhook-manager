@@ -24,6 +24,13 @@ services:
       - 5672:5672
       - 15672:15672
 
+  gateway-svc:
+    image: express-gateway
+    volumes:
+      - ../gateway-service/config/gateway.config.yml:/var/lib/eg/gateway.config.yml
+    ports:
+      - 8080:8080
+
   endpoints-svc:
     image: bsgazineu/endpoints-svc:latest
     build:
