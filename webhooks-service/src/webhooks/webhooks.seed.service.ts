@@ -19,17 +19,17 @@ export class WebhooksSeedService implements SeedService {
             const webhooks: Array<Partial<Webhook>> = [
                 {
                     name: "AnalyticsWebhooks",
-                    url: "http://localhost:7002/analytics",
+                    url: "http://localhost:7003/analytics",
                     event_types: ["VIEW_ITEM", "VIEW_ITEM_LIST"]
                 },
                 {
                     name: "CartWebhooks",
-                    url: "http://localhost:7002/cart",
+                    url: "http://localhost:7003/cart",
                     event_types: ["ADD_TO_CART", "VIEW_CART", "REMOVE_FROM_CART"]
                 },
                 {
                     name: "CheckOutWebhooks",
-                    url: "http://localhost:7002/checkout",
+                    url: "http://localhost:7003/bad",
                     event_types: ["BEGIN_CHECKOUT", "ADD_PAYMENT_INFO", "ADD_SHIPPING_INFO", "PURCHASE"]
                 }
             ]

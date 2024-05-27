@@ -23,3 +23,13 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
+
+  endpoints-svc:
+    image: bsgazineu/endpoints-svc:latest
+    build:
+      context: ../
+      dockerfile: ./endpoints-service/Dockerfile
+    ports:
+      - 7003:7003
+    depends_on:
+      - postgres  

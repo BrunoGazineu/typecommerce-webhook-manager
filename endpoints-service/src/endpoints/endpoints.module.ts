@@ -7,6 +7,7 @@ import { EndpointMiddleware } from './endpoints.middleware';
 import { WebhookLogModel } from 'src/webhook-logs/models/webhook-log.model';
 import { WebhookLogsService } from 'src/webhook-logs/webhook-logs.service';
 import { WebhookLogsWebsocketGateway } from 'src/webhook-logs/webhook-logs-websocket-gateway';
+import { EndpointSeedService } from './enpoints.seed.service';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { WebhookLogsWebsocketGateway } from 'src/webhook-logs/webhook-logs-webso
     EndpointMiddleware,
     WebhookLogsWebsocketGateway,
     WebhookLogsService,
+    EndpointSeedService
   ],
 })
 export class EndpointsModule implements NestModule {
