@@ -2,17 +2,31 @@
 
 import { useEffect } from "react";
 
+import io from 'socket.io-client'
+
 export default function Home() {
   useEffect(() => {
-    const ws = new WebSocket('ws://localhost:7003');
+    const socket = io('http://localhost:7003');
 
-    ws.onopen = () => ("Hello, World")
-    ws.onmessage = (event) => {
-      console.log(event)
-    }
+    socket.on('connect', () => {
+      console.log("Conectado ao servidor");
+    })
+
+    socket.on('disconnect', () => {
+      console.log("Desconectado do servidor websocket");
+    })
+
+    socket.on('message', (data) => {
+      console.log("Mensagem recebida do servidor:", data)
+    })
+
+    socket.on('webhook_log_3', (data) => {
+      console.log("boom")
+      console.log(data)
+    })
 
     return () => {
-      ws.close();
+      socket.disconnect();
     }
   }, [])
 

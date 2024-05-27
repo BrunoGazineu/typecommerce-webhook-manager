@@ -2,12 +2,13 @@ import { OnGatewayConnection, OnGatewayDisconnect, WebSocketGateway, WebSocketSe
 import { WebhookLog } from "./entities/webhook-log.entity";
 import { Server } from "socket.io";
 
-@WebSocketGateway()
+@WebSocketGateway({cors: "*:*"})
 export class WebhookLogsWebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @WebSocketServer() server: Server;
 
     handleConnection(client: any, ...args: any[]) {
         console.log(`Client connected: ${client.id}`);
+        client.handshake.headers.origin = '*';
     }
 
     handleDisconnect(client: any) {
@@ -15,7 +16,6 @@ export class WebhookLogsWebsocketGateway implements OnGatewayConnection, OnGatew
     }
 
     sendNewWebhookLog(endpointId: number, webhookLog: WebhookLog) {
-        console.log("Emitting")
         this.server.emit(`webhook_log_${endpointId}`, webhookLog)
     }
 }
