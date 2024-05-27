@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreateEndpointDto } from './dto/create-endpoint.dto';
 import { UpdateEndpointDto } from './dto/update-endpoint.dto';
 import { EndpointModel } from './models/endpoint.model';
@@ -12,6 +12,8 @@ export class EndpointsService {
   ) {}
 
   async create(createEndpointDto: CreateEndpointDto) {
+    const endpoint = await this.endpointModel.findOne({where: {path: createEndpointDto.path}});
+    if (endpoint) throw new HttpException("Path already in use", 400)
     return await this.endpointModel.create(createEndpointDto)
   }
 

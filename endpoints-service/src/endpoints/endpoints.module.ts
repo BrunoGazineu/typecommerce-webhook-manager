@@ -6,6 +6,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { EndpointMiddleware } from './endpoints.middleware';
 import { WebhookLogModel } from 'src/webhook-logs/models/webhook-log.model';
 import { WebhookLogsService } from 'src/webhook-logs/webhook-logs.service';
+import { WebhookLogsWebsocketGateway } from 'src/webhook-logs/webhook-logs-websocket-gateway';
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { WebhookLogsService } from 'src/webhook-logs/webhook-logs.service';
   providers: [
     EndpointsService,
     EndpointMiddleware,
-    WebhookLogsService
+    WebhookLogsWebsocketGateway,
+    WebhookLogsService,
   ],
 })
 export class EndpointsModule implements NestModule {
