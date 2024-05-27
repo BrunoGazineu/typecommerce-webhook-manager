@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 import { EndpointsModule } from './endpoints/endpoints.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EndpointModel } from './endpoints/models/endpoint.model';
+import { SequelizeModule } from '@nestjs/sequelize';
+
 
 @Module({
   imports: [
@@ -10,14 +11,22 @@ import { EndpointModel } from './endpoints/models/endpoint.model';
       isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV || 'local'}`,
     }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.DB_HOST,
-      username: process.env.DB_USERNAME,
-      port: Number(process.env.DB_PORT),
-      database: process.env.DB_NAME,
-      entities: [EndpointModel],
-      synchronize: (process.env.NODE_ENV || 'local') == 'local'
+    SequelizeModule.forRootAsync({
+      useFactory: (config: ConfigService) => {
+        console.log(config.get<number>("DB_PORT"))
+        return {
+        dialect: "postgres",
+        host: config.get<string>('DB_HOST'),
+        username: config.get<string>('DB_USERNAME'),
+        password: config.get<string>('DB_PASSWORD'),
+        port: +config.get<number>('DB_PORT'),
+        database: config.get<string>('DB_NAME'),
+        models: [EndpointModel],
+        retryAttempts: 10,
+        retryDelay: 1000,
+        autoLoadModels: true // DEV ONLY
+      }},
+      inject: [ConfigService]
     }),
     EndpointsModule
   ],

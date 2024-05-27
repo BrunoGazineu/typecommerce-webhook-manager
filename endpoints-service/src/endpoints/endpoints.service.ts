@@ -1,35 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import { CreateEndpointDto } from './dto/create-endpoint.dto';
 import { UpdateEndpointDto } from './dto/update-endpoint.dto';
-import { InjectRepository } from '@nestjs/typeorm';
 import { EndpointModel } from './models/endpoint.model';
-import { Repository } from 'typeorm';
+import { InjectModel } from '@nestjs/sequelize';
 
 @Injectable()
 export class EndpointsService {
   constructor(
-    @InjectRepository(EndpointModel)
-    private readonly endpointRepository: Repository<EndpointModel>
+    @InjectModel(EndpointModel)
+    private readonly endpointModel: typeof EndpointModel
   ) {}
 
-  create(createEndpointDto: CreateEndpointDto) {
-    this.endpointRepository.create(createEndpointDto)
+  async create(createEndpointDto: CreateEndpointDto) {
+    return await this.endpointModel.create(createEndpointDto)
   }
 
   findAll() {
-    return this.endpointRepository.find();
+    return this.endpointModel.findAll();
   }
 
   findOne(id: number) {
-    return this.endpointRepository.findOne({where: {id}});
+    return this.endpointModel.findByPk(id);
   }
 
-  update(id: number, updateEndpointDto: UpdateEndpointDto) {
-    this.endpointRepository.update(id, updateEndpointDto)
+  async update(id: number, updateEndpointDto: UpdateEndpointDto) {
+    const endpoint = await this.endpointModel.findByPk(id);
+    await endpoint.update(updateEndpointDto);
+    return endpoint
   }
 
   async remove(id: number) {
-    const endpoint = await this.endpointRepository.findOne({where: {id}})
-    this.endpointRepository.remove(endpoint);
+    const endpoint = await this.endpointModel.findOne({where: {id}})
+    endpoint.destroy()
   }
 }
