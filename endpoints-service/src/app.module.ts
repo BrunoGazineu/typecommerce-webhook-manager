@@ -3,6 +3,7 @@ import { EndpointsModule } from './endpoints/endpoints.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EndpointModel } from './endpoints/models/endpoint.model';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { WebhooksLogModule } from './webhooks-log/webhooks-log.module';
 
 
 @Module({
@@ -28,7 +29,8 @@ import { SequelizeModule } from '@nestjs/sequelize';
       }},
       inject: [ConfigService]
     }),
-    EndpointsModule
+    EndpointsModule,
+    WebhooksLogModule
   ],
   controllers: [],
   providers: [],
