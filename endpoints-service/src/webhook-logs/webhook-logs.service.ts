@@ -11,7 +11,6 @@ export class WebhookLogsService
     private readonly webhookLogModel: typeof WebhookLogModel
   ) {}
   async create(createWebhookLogDto: CreateWebhookLogDto) {
-    console.log("Creating webhook log")
     await this.webhookLogModel.create(createWebhookLogDto);
   }
 

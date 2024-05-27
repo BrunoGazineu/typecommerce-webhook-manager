@@ -34,7 +34,6 @@ export class EndpointMiddleware implements NestMiddleware {
     }
 
     private handleDefaultRequest(req: Request, res: Response, endpoint: Endpoint) {
-        console.log("Handle Default")
         this.webhookLogsService.create(new CreateWebhookLogDto(endpoint.id!, req.body));
         return res.status(200).send(req.body);
     }
