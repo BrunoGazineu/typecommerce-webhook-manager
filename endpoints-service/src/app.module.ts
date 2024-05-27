@@ -3,7 +3,8 @@ import { EndpointsModule } from './endpoints/endpoints.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EndpointModel } from './endpoints/models/endpoint.model';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { WebhooksLogModule } from './webhooks-log/webhooks-log.module';
+import { WebhookLogsModule } from './webhook-logs/webhook-logs.module';
+import { WebhookLogModel } from './webhook-logs/models/webhook-log.model';
 
 
 @Module({
@@ -22,7 +23,7 @@ import { WebhooksLogModule } from './webhooks-log/webhooks-log.module';
         password: config.get<string>('DB_PASSWORD'),
         port: +config.get<number>('DB_PORT'),
         database: config.get<string>('DB_NAME'),
-        models: [EndpointModel],
+        models: [EndpointModel, WebhookLogModel],
         retryAttempts: 10,
         retryDelay: 1000,
         autoLoadModels: true // DEV ONLY
@@ -30,7 +31,7 @@ import { WebhooksLogModule } from './webhooks-log/webhooks-log.module';
       inject: [ConfigService]
     }),
     EndpointsModule,
-    WebhooksLogModule
+    WebhookLogsModule
   ],
   controllers: [],
   providers: [],

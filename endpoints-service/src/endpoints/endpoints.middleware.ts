@@ -4,12 +4,15 @@ import { EndpointModel } from "./models/endpoint.model";
 import { InjectModel } from "@nestjs/sequelize";
 import { Status } from "./entities/endpoint-status.enum";
 import { Endpoint } from "./entities/endpoint.entity";
+import { WebhookLogsService } from "src/webhook-logs/webhook-logs.service";
+import { CreateWebhookLogDto } from "src/webhook-logs/dto/create-webhook-log.dto";
 
 @Injectable()
 export class EndpointMiddleware implements NestMiddleware {
     constructor(
         @InjectModel(EndpointModel)
-        private readonly endpointModel: typeof EndpointModel
+        private readonly endpointModel: typeof EndpointModel,
+        private readonly webhookLogsService: WebhookLogsService
     ) {}
 
     async use(req: Request, res: Response, next: NextFunction) {
@@ -31,6 +34,8 @@ export class EndpointMiddleware implements NestMiddleware {
     }
 
     private handleDefaultRequest(req: Request, res: Response, endpoint: Endpoint) {
+        console.log("Handle Default")
+        this.webhookLogsService.create(new CreateWebhookLogDto(endpoint.id!, req.body));
         return res.status(200).send(req.body);
     }
 }

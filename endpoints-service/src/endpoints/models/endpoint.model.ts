@@ -1,5 +1,6 @@
-import { Column, DataType, Model, Table } from "sequelize-typescript";
+import { Column, DataType, HasMany, Model, Table } from "sequelize-typescript";
 import { Status } from "../entities/endpoint-status.enum";
+import { WebhookLogModel } from "src/webhook-logs/models/webhook-log.model";
 
 @Table({modelName: "endpoint"})
 export class EndpointModel extends Model<EndpointModel> {
@@ -15,4 +16,7 @@ export class EndpointModel extends Model<EndpointModel> {
         defaultValue: Status.DEFAULT
     })
     status: Status;
+
+    @HasMany(() => WebhookLogModel)
+    webhookLogs: WebhookLogModel[]
 }
