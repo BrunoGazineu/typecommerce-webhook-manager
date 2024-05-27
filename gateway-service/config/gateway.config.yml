@@ -3,7 +3,7 @@ http:
 apiEndpoints:
   endpoints:
     host: '*'
-    paths: '/*'
+    paths: ['/api/endpoints*', '/api/webhooklogs*']
     methods: ['POST', 'GET', 'PATCH', 'DELETE']
 
 serviceEndpoints:
