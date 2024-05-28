@@ -5,7 +5,6 @@ import { WebhookEvent } from './entities/webhook-event.entity';
 import { ConfigService } from '@nestjs/config';
 import { IGateway } from 'src/shared/gateways/gateway-interface';
 import { Webhook } from 'src/webhooks/entities/webhook.entity';
-import { DeadLetter } from 'src/dead-letter-queue/entities/dead-letter.entity';
 
 @Injectable()
 export class EventsDeliveryService {
@@ -14,8 +13,6 @@ export class EventsDeliveryService {
         private readonly deliveryService: IDeliveryService,
         @Inject("WebhookPersistentGateway")
         private readonly webhooksGateway: IGateway<Webhook>,
-        @Inject("DeadLetterGateway")
-        private readonly deadLetterGateway: IGateway<DeadLetter>,
         private readonly configService: ConfigService,
         private readonly logger: Logger
     ) {}
@@ -37,6 +34,6 @@ export class EventsDeliveryService {
             if (lastResponse.success) return;
         }
 
-        await this.deadLetterGateway.create(new DeadLetter(webhookEvent, lastResponse.error))
+        throw new Error("not implemented");
     }
 }

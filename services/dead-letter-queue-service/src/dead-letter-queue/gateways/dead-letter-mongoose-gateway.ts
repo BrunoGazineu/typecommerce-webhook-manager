@@ -1,9 +1,9 @@
-import { IGateway } from "src/shared/gateways/gateway-interface";
 import { DeadLetter } from "../entities/dead-letter.entity";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { DeadLetterModel } from "../models/dead-letter.model";
 import { Injectable } from "@nestjs/common";
+import { IGateway } from "./gateway-interface";
 
 @Injectable()
 export class DeadLetterMongooseGateway implements IGateway<DeadLetter> {

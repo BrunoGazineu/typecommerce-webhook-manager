@@ -2,19 +2,23 @@ import { Module } from '@nestjs/common';
 import { EventsDeliveryModule } from './events-delivery/events-delivery.module';
 import { WebhooksModule } from './webhooks/webhooks.module';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ConfigModule } from '@nestjs/config';
-import { DeadLetterQueueModule } from './dead-letter-queue/dead-letter-queue.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: `.env.${process.env.NODE_ENV}`,
+      envFilePath: `.env.${process.env.NODE_ENV || 'local'}`,
     }),
-    MongooseModule.forRoot(process.env.MONGO_CONNECTION),
+    MongooseModule.forRootAsync({
+      useFactory: (config: ConfigService) => ({
+        uri: config.get<string>('MONGO_CONNECTION')
+      }),
+      inject: [ConfigService]
+    }
+    ),
     EventsDeliveryModule,
     WebhooksModule,
-    DeadLetterQueueModule
   ],
   controllers: [],
   providers: [],

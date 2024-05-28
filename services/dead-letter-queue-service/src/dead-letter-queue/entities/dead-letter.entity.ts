@@ -1,4 +1,4 @@
-import { WebhookEvent } from "src/events-delivery/entities/webhook-event.entity";
+import { WebhookEvent } from "./webhook-event.entity";
 
 export class DeadLetter {
     constructor(

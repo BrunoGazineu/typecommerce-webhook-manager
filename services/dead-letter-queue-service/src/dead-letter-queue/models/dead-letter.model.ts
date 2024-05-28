@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument } from "mongoose";
-import { WebhookEvent } from "src/events-delivery/entities/webhook-event.entity";
+import { WebhookEvent } from "../entities/webhook-event.entity";
 
 export type DeadLetterDocument = HydratedDocument<DeadLetterModel>
 
