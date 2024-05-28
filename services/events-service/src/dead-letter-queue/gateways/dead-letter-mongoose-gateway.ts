@@ -22,19 +22,24 @@ export class DeadLetterMongooseGateway implements IGateway<DeadLetter> {
             deadLetter => this.modelToEntity(deadLetter)
         )
     }
+    async findById(id: number): Promise<DeadLetter> {
+        const deadLetter = await this.deadLetterModel.findById(id);
+        return this.modelToEntity(deadLetter);
+    }
+    async deleteById(id: number): Promise<boolean> {
+        const result = await this.deadLetterModel.deleteOne({id: id});
+        if (result.deletedCount === 1)
+            return true
+
+        throw new Error("No Dead Letter was found with id: " + id);
+    }
     update(model: DeadLetter): Promise<boolean> {
         throw new Error("Method not implemented.");
     }
     createMany(model: DeadLetter[]): Promise<boolean> {
         throw new Error("Method not implemented.");
     }
-    findById(id: string): Promise<DeadLetter> {
-        throw new Error("Method not implemented.");
-    }
     findAllByEventType(event_type: string): Promise<DeadLetter[]> {
-        throw new Error("Method not implemented.");
-    }
-    deleteById(id: number): Promise<boolean> {
         throw new Error("Method not implemented.");
     }
     private modelToEntity(model: DeadLetterModel) {

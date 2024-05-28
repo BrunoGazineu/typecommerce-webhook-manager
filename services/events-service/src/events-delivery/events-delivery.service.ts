@@ -38,7 +38,5 @@ export class EventsDeliveryService {
         }
 
         await this.deadLetterGateway.create(new DeadLetter(webhookEvent, lastResponse.error))
-        console.log("Error processing Delivery")
-        console.log(lastResponse)
     }
 }

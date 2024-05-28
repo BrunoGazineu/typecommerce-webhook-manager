@@ -8,6 +8,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { WebhookModel, WebhookSchema } from 'src/webhooks/models/webhook.model';
 import { DeadLetterMongooseGateway } from 'src/dead-letter-queue/gateways/dead-letter-mongoose-gateway';
 import { DeadLetterModel, DeadLetterSchema } from 'src/dead-letter-queue/models/dead-letter.model';
+import { DeadLetterQueueService } from 'src/dead-letter-queue/dead-letter-queue.service';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { DeadLetterModel, DeadLetterSchema } from 'src/dead-letter-queue/models/
   controllers: [EventsDeliveryController],
   providers: [
     EventsDeliveryService,
+    DeadLetterQueueService,
     Logger,
     HttpDeliveryService,
     {

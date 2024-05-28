@@ -28,7 +28,7 @@ export class WebhookMongooseGateway implements IGateway<Webhook> {
         const entries = await this.webhookModel.insertMany(webhooks);
         return true;
     }
-    async findById(id: string): Promise<Webhook> {
+    async findById(id: number): Promise<Webhook> {
         const webhook = await this.webhookModel.findOne({id: id});
 
         if (!webhook)

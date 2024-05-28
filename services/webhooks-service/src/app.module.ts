@@ -21,7 +21,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
         host: config.get<string>('DB_HOST'),
         username: config.get<string>('DB_USERNAME'),
         password: config.get<string>('DB_PASSWORD'),
-        port: Number(config.get<string>('DB_PORT')),
+        port: +config.get<string>('DB_PORT'),
         database: config.get<string>('DB_NAME'),
         models: [WebhookModel, EventTypeModel, WebhookEventTypeModel],
         retryAttempts: 10,

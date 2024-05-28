@@ -30,7 +30,7 @@ export class WebhookGRPCGateway implements IGateway<Webhook> {
     createMany(webhooks: Webhook[]): Promise<boolean> {
         throw new Error("Method not implemented.");
     }
-    findById(id: string): Promise<Webhook> {
+    findById(id: number): Promise<Webhook> {
         throw new Error("Method not implemented.");
     }
     findAllByEventType(event_type: string): Promise<Webhook[]> {
