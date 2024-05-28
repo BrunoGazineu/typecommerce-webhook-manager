@@ -16,8 +16,6 @@ async function bootstrap() {
 
   const config = app.get<ConfigService>(ConfigService)
 
-  console.log(config.get<string>('GRPC_URL'))
-
   const grpcMicroservice = app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.GRPC,
     options: {

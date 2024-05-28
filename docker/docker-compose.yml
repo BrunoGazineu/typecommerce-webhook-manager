@@ -31,16 +31,6 @@ services:
     ports:
       - 8080:8080
 
-  endpoints-svc:
-    image: bsgazineu/endpoints-svc:latest
-    build:
-      context: ../services/endpoints-service/
-      dockerfile: ./Dockerfile
-    ports:
-      - 7003:80
-    depends_on:
-      - postgres
-
   webhooks-svc:
     image: bsgazineu/webhooks-svc:latest
     build:
@@ -63,3 +53,24 @@ services:
     depends_on:
       - mongodb
       - rabbitmq
+
+  dead-letter-queue-svc:
+    image: bsgazineu/dead-letter-queue-svc:latest
+    build:
+      context: ../services/dead-letter-queue-service/
+      dockerfile: ./Dockerfile
+    ports:
+      - 7002:80
+    depends_on:
+      - mongodb
+      - rabbitmq
+
+  endpoints-svc:
+    image: bsgazineu/endpoints-svc:latest
+    build:
+      context: ../services/endpoints-service/
+      dockerfile: ./Dockerfile
+    ports:
+      - 7003:80
+    depends_on:
+      - postgres

@@ -22,13 +22,11 @@ export class EndpointsService {
   }
 
   findOne(id: number) {
-
     return this.endpointModel.findByPk(id, {include: 'webhookLogs'});
   }
 
   async update(id: number, updateEndpointDto: UpdateEndpointDto) {
     const endpoint = await this.endpointModel.findByPk(id);
-    console.log(endpoint)
     await endpoint.update(updateEndpointDto);
     return endpoint
   }

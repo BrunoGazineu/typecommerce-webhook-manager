@@ -7,7 +7,6 @@ export class WebhookLogsWebsocketGateway implements OnGatewayConnection, OnGatew
     @WebSocketServer() server: Server;
 
     handleConnection(client: any, ...args: any[]) {
-        console.log(`Client connected: ${client.id}`);
         client.handshake.headers.origin = '*';
     }
 

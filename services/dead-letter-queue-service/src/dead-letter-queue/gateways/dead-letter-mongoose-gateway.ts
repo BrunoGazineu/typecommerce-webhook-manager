@@ -18,13 +18,15 @@ export class DeadLetterMongooseGateway implements IGateway<DeadLetter> {
     }
     async findAll(): Promise<DeadLetter[]> {
         const deadLetters = await this.deadLetterModel.find();
-        console.log(deadLetters)
         return deadLetters.map(
             deadLetter => this.modelToEntity(deadLetter)
         )
     }
     async findById(id: string): Promise<DeadLetter> {
         const deadLetter = await this.deadLetterModel.findById(id);
+        if (!deadLetter)
+            throw new Error("No Dead Letter was found with id: " + id);
+
         return this.modelToEntity(deadLetter);
     }
     async deleteById(id: string): Promise<boolean> {

@@ -38,7 +38,7 @@ export class DeadLetterQueueService {
   async retry(id: string, retryDeadLetterDto: RetryDeadLetterDto) {
     this.logger.log("[Dead Letter] Retry")
 
-    const deadLetter = await this.findOne(id);
+    const deadLetter = await this.deadLetterGateway.findById(id);
     const webhookEvent: WebhookEvent = {...deadLetter.event, ...retryDeadLetterDto};
 
     this.eventsPublisher.emit("retry-event", webhookEvent);

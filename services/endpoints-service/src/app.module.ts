@@ -15,7 +15,6 @@ import { WebhookLogModel } from './webhook-logs/models/webhook-log.model';
     }),
     SequelizeModule.forRootAsync({
       useFactory: (config: ConfigService) => {
-        console.log(config.get<number>("DB_PORT"))
         return {
         dialect: "postgres",
         host: config.get<string>('DB_HOST'),

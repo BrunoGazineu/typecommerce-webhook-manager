@@ -13,6 +13,10 @@ apiEndpoints:
     host: '*'
     paths: ['/api/events-delivery']
     methods: ['POST']
+  dead-letter:
+    hosts: '*'
+    paths: ['/api/dead-letter-queue*']
+    methods: ['POST', 'GET', 'DELETE']
 serviceEndpoints:
   endpoints-service:
     url: 'http://endpoints-svc/'
@@ -20,6 +24,8 @@ serviceEndpoints:
     url: 'http://webhooks-svc/'
   events-service:
     url: 'http://events-svc/'
+  dead-letter-service:
+    url: 'http://dead-letter-queue-svc/'
 policies:
   - proxy
 pipelines:
@@ -46,4 +52,12 @@ pipelines:
       - proxy:
           - action:
               serviceEndpoint: events-service
+              changeOrigin: true
+  dead-letter-pipeline:
+    apiEndpoints:
+      - dead-letter
+    policies:
+      - proxy:
+          - action:
+              serviceEndpoint: dead-letter-service
               changeOrigin: true
