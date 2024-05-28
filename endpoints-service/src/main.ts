@@ -6,6 +6,6 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const webhooksSeedService = app.get(EndpointSeedService);
   webhooksSeedService.seedData();
-  await app.listen(7003);
+  await app.listen(process.env.APP_PORT);
 }
 bootstrap();

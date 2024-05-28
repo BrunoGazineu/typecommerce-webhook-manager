@@ -5,10 +5,15 @@ apiEndpoints:
     host: '*'
     paths: ['/api/endpoints*', '/api/webhooklogs*']
     methods: ['POST', 'GET', 'PATCH', 'DELETE']
-
+  webhooks:
+    host: '*'
+    paths: ['/api/webhooks*']
+    methods: ['POST', 'GET', 'PATCH', 'DELETE']
 serviceEndpoints:
   endpoints-service:
-    url: 'http://endpoints-svc:7003/'
+    url: 'http://endpoints-svc/'
+  webhooks-service:
+    url: 'http://webhooks-svc/'
 policies:
   - proxy
 pipelines:
@@ -19,4 +24,12 @@ pipelines:
       - proxy:
           - action:
               serviceEndpoint: endpoints-service
+              changeOrigin: true
+  webhooks-pipeline:
+    apiEndpoints:
+      - webhooks
+    policies:
+      - proxy:
+          - action:
+              serviceEndpoint: webhooks-service
               changeOrigin: true
