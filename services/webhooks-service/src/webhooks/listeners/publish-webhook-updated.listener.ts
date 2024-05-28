@@ -1,12 +1,12 @@
 import { Inject, Logger } from "@nestjs/common";
-import { ClientProxy } from "@nestjs/microservices";
 import { OnEvent } from "@nestjs/event-emitter";
 import { WebhookUpdatedEvent } from "../events/webhook-updated.event";
+import { IPublisher } from "src/shared/publishers/publisher-interface";
 
 export class PublishWebhookUpdatedListener {
     constructor(
         @Inject("WEBHOOKS_SERVICE")
-        private publisher: ClientProxy,
+        private publisher: IPublisher,
         private readonly logger: Logger
     ){}
     

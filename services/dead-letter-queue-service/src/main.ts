@@ -19,6 +19,7 @@ async function bootstrap() {
     }
   });
 
+  await app.startAllMicroservices();
   await app.listen(config.get<string>('APP_PORT'));
 }
 bootstrap();

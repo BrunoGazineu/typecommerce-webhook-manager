@@ -3,6 +3,7 @@ import { EventsDeliveryModule } from './events-delivery/events-delivery.module';
 import { WebhooksModule } from './webhooks/webhooks.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       inject: [ConfigService]
     }
     ),
+    EventEmitterModule.forRoot(),
     EventsDeliveryModule,
     WebhooksModule,
   ],
