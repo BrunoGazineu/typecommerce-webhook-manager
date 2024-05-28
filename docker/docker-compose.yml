@@ -27,14 +27,14 @@ services:
   gateway-svc:
     image: express-gateway
     volumes:
-      - ../gateway-service/config/gateway.config.yml:/var/lib/eg/gateway.config.yml
+      - ../services/gateway-service/config/gateway.config.yml:/var/lib/eg/gateway.config.yml
     ports:
       - 8080:8080
 
   endpoints-svc:
     image: bsgazineu/endpoints-svc:latest
     build:
-      context: ../endpoints-service/
+      context: ../services/endpoints-service/
       dockerfile: ./Dockerfile
     ports:
       - 7003:80
@@ -44,7 +44,7 @@ services:
   webhooks-svc:
     image: bsgazineu/webhooks-svc:latest
     build:
-      context: ../webhooks-service/
+      context: ../services/webhooks-service/
       dockerfile: ./Dockerfile
     ports:
       - 7000:80
