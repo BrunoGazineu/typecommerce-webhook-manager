@@ -34,9 +34,21 @@ services:
   endpoints-svc:
     image: bsgazineu/endpoints-svc:latest
     build:
-      context: ../
-      dockerfile: ./endpoints-service/Dockerfile
+      context: ../endpoints-service/
+      dockerfile: ./Dockerfile
     ports:
       - 7003:7003
     depends_on:
-      - postgres  
+      - postgres
+
+  webhooks-svc:
+    image: bsgazineu/webhooks-svc:latest
+    build:
+      context: ../webhooks-service/
+      dockerfile: ./Dockerfile
+    ports:
+      - 7000:7000
+      - 50001:50001
+    depends_on:
+      - postgres
+      - rabbitmq
