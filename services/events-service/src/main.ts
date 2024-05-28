@@ -20,6 +20,6 @@ async function bootstrap() {
   await webhooksSyncService.getWebhooks();
 
   await app.startAllMicroservices();
-  await app.listen(7001);
+  await app.listen(process.env.APP_PORT);
 }
 bootstrap();

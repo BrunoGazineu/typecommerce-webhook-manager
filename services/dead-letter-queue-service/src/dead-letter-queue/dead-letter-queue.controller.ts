@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { DeadLetterQueueService } from './dead-letter-queue.service';
 import { RetryDeadLetterDto } from './dto/retry-dead-letter.dto';
 
-@Controller('dead-letter-queue')
+@Controller('api/dead-letter-queue')
 export class DeadLetterQueueController {
   constructor(private readonly deadLetterQueueService: DeadLetterQueueService) {}
   @Get()
