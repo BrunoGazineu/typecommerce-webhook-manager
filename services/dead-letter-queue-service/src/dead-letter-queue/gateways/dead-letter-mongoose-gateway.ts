@@ -1,6 +1,6 @@
 import { DeadLetter } from "../entities/dead-letter.entity";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
 import { DeadLetterModel } from "../models/dead-letter.model";
 import { Injectable } from "@nestjs/common";
 import { IGateway } from "./gateway-interface";
@@ -18,16 +18,17 @@ export class DeadLetterMongooseGateway implements IGateway<DeadLetter> {
     }
     async findAll(): Promise<DeadLetter[]> {
         const deadLetters = await this.deadLetterModel.find();
+        console.log(deadLetters)
         return deadLetters.map(
             deadLetter => this.modelToEntity(deadLetter)
         )
     }
-    async findById(id: number): Promise<DeadLetter> {
+    async findById(id: string): Promise<DeadLetter> {
         const deadLetter = await this.deadLetterModel.findById(id);
         return this.modelToEntity(deadLetter);
     }
-    async deleteById(id: number): Promise<boolean> {
-        const result = await this.deadLetterModel.deleteOne({id: id});
+    async deleteById(id: string): Promise<boolean> {
+        const result = await this.deadLetterModel.deleteOne({_id: id});
         if (result.deletedCount === 1)
             return true
 
@@ -42,7 +43,7 @@ export class DeadLetterMongooseGateway implements IGateway<DeadLetter> {
     findAllByEventType(event_type: string): Promise<DeadLetter[]> {
         throw new Error("Method not implemented.");
     }
-    private modelToEntity(model: DeadLetterModel) {
-        return new DeadLetter(model.event, model.error);
+    private modelToEntity(model: DeadLetterModel & { _id: Types.ObjectId }) {
+        return new DeadLetter(model._id.toString(), model.event, model.error);
     }
 }

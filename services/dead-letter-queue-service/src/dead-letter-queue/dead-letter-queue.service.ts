@@ -2,36 +2,48 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { RetryDeadLetterDto } from './dto/retry-dead-letter.dto';
 import { IGateway } from './gateways/gateway-interface';
 import { DeadLetter } from './entities/dead-letter.entity';
+import { IPublisher } from 'src/shared/publishers/publisher-interface';
+import { WebhookEvent } from './entities/webhook-event.entity';
 
 @Injectable()
 export class DeadLetterQueueService {
   constructor(
     @Inject("DeadLetterGateway")
     private readonly deadLetterGateway: IGateway<DeadLetter>,
+    @Inject("EVENTS_SERVICE")
+    private readonly eventsPublisher: IPublisher,
     private readonly logger: Logger
   ) {}
 
-  create(deadLetter: DeadLetter) {
+  async create(deadLetter: DeadLetter) {
     this.logger.log("[Dead Letter] Create")
     return this.deadLetterGateway.create(deadLetter)
   }
 
-  findAll() {
+  async findAll() {
     this.logger.log("[Dead Letter] Find All");
     return this.deadLetterGateway.findAll();
   }
 
-  findOne(id: number) {
+  async findOne(id: string) {
     this.logger.log("[Dead Letter] Find One");
     return this.deadLetterGateway.findById(id);
   }
 
-  remove(id: number) {
+  async remove(id: string) {
     this.logger.log("[Dead Letter] Remove")
     return this.deadLetterGateway.deleteById(id);
   }
 
-  retry(id: number, retryDeadLetterDto: RetryDeadLetterDto) {
+  async retry(id: string, retryDeadLetterDto: RetryDeadLetterDto) {
     this.logger.log("[Dead Letter] Retry")
+
+    const deadLetter = await this.findOne(id);
+    const webhookEvent: WebhookEvent = {...deadLetter.event, ...retryDeadLetterDto};
+
+    console.log(this.eventsPublisher)
+    this.eventsPublisher.emit("retry-event", webhookEvent);
+
+    // this.remove(id);
   }
 }

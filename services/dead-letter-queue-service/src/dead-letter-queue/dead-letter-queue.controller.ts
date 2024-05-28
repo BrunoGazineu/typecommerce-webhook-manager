@@ -14,17 +14,17 @@ export class DeadLetterQueueController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.deadLetterQueueService.findOne(+id);
+    return this.deadLetterQueueService.findOne(id);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.deadLetterQueueService.remove(+id);
+    return this.deadLetterQueueService.remove(id);
   }
 
-  @Post(":id")
+  @Post(":id/retry")
   retry(@Param('id') id: string, @Body() retryDeadLetterDto: RetryDeadLetterDto) {
-    return this.deadLetterQueueService.retry(+id, retryDeadLetterDto);
+    return this.deadLetterQueueService.retry(id, retryDeadLetterDto);
   }
 
   @EventPattern("create-dead-letter")

@@ -12,11 +12,19 @@ async function bootstrap() {
 
   const config = app.get<ConfigService>(ConfigService);
 
-  const transportMicroservice = app.connectMicroservice<MicroserviceOptions>({
+  const webhookTransportMicroservice = app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.RMQ,
     options: {
       urls: [config.get<string>('RABBITMQ_URL')],
       queue: 'webhook-queue',
+    }
+  })
+
+  const eventsTrasnsportMicroservice = app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.RMQ,
+    options: {
+      urls: [config.get<string>('RABBITMQ_URL')],
+      queue: 'events-queue',
     }
   })
   
