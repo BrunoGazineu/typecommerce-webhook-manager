@@ -9,11 +9,17 @@ apiEndpoints:
     host: '*'
     paths: ['/api/webhooks*']
     methods: ['POST', 'GET', 'PATCH', 'DELETE']
+  events:
+    host: '*'
+    paths: ['/api/events-delivery']
+    methods: ['POST']
 serviceEndpoints:
   endpoints-service:
     url: 'http://endpoints-svc/'
   webhooks-service:
     url: 'http://webhooks-svc/'
+  events-service:
+    url: 'http://events-svc/'
 policies:
   - proxy
 pipelines:
@@ -32,4 +38,12 @@ pipelines:
       - proxy:
           - action:
               serviceEndpoint: webhooks-service
+              changeOrigin: true
+  events-pipeline:
+    apiEndpoints:
+      - events
+    policies:
+      - proxy:
+          - action:
+              serviceEndpoint: events-service
               changeOrigin: true

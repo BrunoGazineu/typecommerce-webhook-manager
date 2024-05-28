@@ -38,7 +38,7 @@ export class EventsDeliveryService {
         for (let retries = 0; retries < this.configService.get("DELIVERY_RETRIES"); retries++) {
             lastResponse = await this.deliveryService.deliver(webhookEvent);
             if (lastResponse.success) {
-                this.logger.log(["[EventDelivery] Succesfully delivered to " + webhookEvent.url])
+                this.logger.log("[EventDelivery] Succesfully delivered to " + webhookEvent.url)
                 return
             };
         }
