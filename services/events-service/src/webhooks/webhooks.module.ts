@@ -8,18 +8,22 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { WebhookGRPCGateway } from './gateways/webhook-grpc-gateway';
 import { WebhooksSyncService } from './webhooks.sync.service';
 import { join } from 'path';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{name: WebhookModel.name, schema: WebhookSchema}]),
-    ClientsModule.register([{
+    ClientsModule.registerAsync([{
       name: "WEBHOOKS_SERVICE",
-      transport: Transport.GRPC,
-      options: {
-        package: "webhooks",
-        protoPath: join(__dirname, "protos/webhooks.proto"),
-        url: "localhost:50001"
-      }
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        transport: Transport.GRPC,
+        options: {
+          package: "webhooks",
+          protoPath: join(__dirname, "protos/webhooks.proto"),
+          url: config.get<string>("GRPC_URL")
+        }
+      }),
     }])
   ],
   controllers: [WebhooksController],

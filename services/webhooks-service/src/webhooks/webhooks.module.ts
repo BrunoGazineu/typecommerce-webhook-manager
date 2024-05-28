@@ -12,18 +12,22 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { PublishWebhookUpdatedListener } from './listeners/publish-webhook-updated.listener';
 import { PublishWebhookDeletedListener } from './listeners/publish-webhook-deleted.listener';
 import { WebhooksSeedService } from './webhooks.seed.service';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
     SequelizeModule.forFeature([WebhookModel, WebhookEventTypeModel, EventTypeModel]),
-    ClientsModule.register([
+    ClientsModule.registerAsync([
       {
         name: 'WEBHOOKS_SERVICE',
-        transport: Transport.RMQ,
-        options: {
-          urls: ["amqp://guest:guest@localhost:5672"], // TEMP
-          queue: 'webhook-queue',
-        }
+        inject: [ConfigService],
+        useFactory: (config: ConfigService) => ({
+          transport: Transport.RMQ,
+          options: {
+            urls: [config.get<string>("RABBITMQ_URL")],
+            queue: 'webhook-queue',
+          }
+        })
       }
     ]),
   ],

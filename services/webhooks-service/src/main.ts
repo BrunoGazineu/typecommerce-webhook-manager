@@ -6,6 +6,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
 import { WebhooksSeedService } from './webhooks/webhooks.seed.service';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -13,12 +14,14 @@ async function bootstrap() {
   });
   app.useGlobalPipes(new ValidationPipe());
 
+  const config = app.get<ConfigService>(ConfigService)
+
   const grpcMicroservice = app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.GRPC,
     options: {
       package: "webhooks",
       protoPath: join(__dirname, 'webhooks/protos/webhooks.proto'),
-      url: 'localhost:50001'
+      url: config.get<string>('GRPC_URL')
     }
   })
 
@@ -29,6 +32,6 @@ async function bootstrap() {
   webhooksSeedService.seedData();
 
   await app.startAllMicroservices();
-  await app.listen(process.env.APP_PORT);
+  await app.listen(config.get<string>('APP_PORT'));
 }
 bootstrap();

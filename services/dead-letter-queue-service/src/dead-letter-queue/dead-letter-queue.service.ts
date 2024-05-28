@@ -11,6 +11,11 @@ export class DeadLetterQueueService {
     private readonly logger: Logger
   ) {}
 
+  create(deadLetter: DeadLetter) {
+    this.logger.log("[Dead Letter] Create")
+    return this.deadLetterGateway.create(deadLetter)
+  }
+
   findAll() {
     this.logger.log("[Dead Letter] Find All");
     return this.deadLetterGateway.findAll();

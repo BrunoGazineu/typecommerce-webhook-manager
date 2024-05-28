@@ -3,15 +3,19 @@ import { AppModule } from './app.module';
 import { loggerLevel } from './config/logger-config';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { WebhooksSyncService } from './webhooks/webhooks.sync.service';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    logger: loggerLevel[process.env.NODE_ENV]
+    logger: loggerLevel[process.env.NODE_ENV || 'local']
   });
-  const microservice = app.connectMicroservice<MicroserviceOptions>({
+
+  const config = app.get<ConfigService>(ConfigService);
+
+  const transportMicroservice = app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.RMQ,
     options: {
-      urls: ["amqp://guest:guest@localhost:5672"], // TEMP
+      urls: [config.get<string>('RABBITMQ_URL')],
       queue: 'webhook-queue',
     }
   })
@@ -20,6 +24,6 @@ async function bootstrap() {
   await webhooksSyncService.getWebhooks();
 
   await app.startAllMicroservices();
-  await app.listen(process.env.APP_PORT);
+  await app.listen(config.get<string>('APP_PORT'));
 }
 bootstrap();
