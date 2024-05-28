@@ -3,6 +3,7 @@ import { Webhook } from "../entities/webhook.entity";
 import { ClientGrpc } from "@nestjs/microservices";
 import { firstValueFrom, Observable } from "rxjs";
 import { IGateway } from "src/shared/gateways/gateway-interface";
+import { Effect, Schedule, pipe } from "effect";
 
 @Injectable()
 export class WebhookGRPCGateway implements IGateway<Webhook> {
@@ -14,8 +15,22 @@ export class WebhookGRPCGateway implements IGateway<Webhook> {
         this.webhooksService = this.grpcClient.getService("WebhooksService");
     }
     async findAll(): Promise<Webhook[]> {
-        const response: Observable<{webhooks: {id: number, name: string, url: string, eventTypes: string[]}[]}> = await this.webhooksService.GetAllWebhooks({})
-        const {webhooks} = await firstValueFrom(response);
+        const response: Observable<{webhooks: {id: number, name: string, url: string, eventTypes: string[]}[]}> = await this.webhooksService.GetAllWebhooks({});
+
+        const effect = Effect.tryPromise({
+            try: () => firstValueFrom(response),
+            catch: (error) => new Error(String(error))
+        });
+
+        const retryEffect = pipe(
+            effect,
+            Effect.retry(pipe(
+                Schedule.recurs(10),
+                Schedule.addDelay(()=>2000)
+            ))
+        );
+
+        const { webhooks } = await Effect.runPromise(retryEffect);
         return webhooks.map((webhook) => {
             const {id, name, url, eventTypes} = webhook;
             return new Webhook(id, name, url, eventTypes);

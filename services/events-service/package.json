@@ -35,7 +35,7 @@
     "amqp-connection-manager": "^4.1.14",
     "amqplib": "^0.10.4",
     "axios": "^1.7.2",
-    "effect": "^3.2.4",
+    "effect": "^3.2.5",
     "mongoose": "^8.4.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1"
