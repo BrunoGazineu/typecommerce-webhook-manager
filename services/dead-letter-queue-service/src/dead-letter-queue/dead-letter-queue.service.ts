@@ -41,9 +41,8 @@ export class DeadLetterQueueService {
     const deadLetter = await this.findOne(id);
     const webhookEvent: WebhookEvent = {...deadLetter.event, ...retryDeadLetterDto};
 
-    console.log(this.eventsPublisher)
     this.eventsPublisher.emit("retry-event", webhookEvent);
 
-    // this.remove(id);
+    await this.remove(id);
   }
 }
