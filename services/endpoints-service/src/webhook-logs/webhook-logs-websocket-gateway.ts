@@ -2,7 +2,7 @@ import { OnGatewayConnection, OnGatewayDisconnect, WebSocketGateway, WebSocketSe
 import { WebhookLog } from "./entities/webhook-log.entity";
 import { Server } from "socket.io";
 
-@WebSocketGateway({cors: "*:*"})
+@WebSocketGateway({cors: "*:*", namespace: "api/logs"})
 export class WebhookLogsWebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @WebSocketServer() server: Server;
 
