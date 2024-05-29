@@ -22,7 +22,7 @@ export class DeadLetterQueueController {
     return this.deadLetterQueueService.remove(id);
   }
 
-  @Post(":id/retry")
+  @Post(":id")
   retry(@Param('id') id: string, @Body() retryDeadLetterDto: RetryDeadLetterDto) {
     return this.deadLetterQueueService.retry(id, retryDeadLetterDto);
   }

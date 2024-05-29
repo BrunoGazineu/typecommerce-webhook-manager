@@ -7,7 +7,7 @@ apiEndpoints:
     methods: ['POST', 'GET', 'PATCH', 'DELETE']
   webhooks:
     host: '*'
-    paths: ['/api/webhooks*']
+    paths: ['/api/webhooks*', '/api/event-types']
     methods: ['POST', 'GET', 'PATCH', 'DELETE']
   events:
     host: '*'
