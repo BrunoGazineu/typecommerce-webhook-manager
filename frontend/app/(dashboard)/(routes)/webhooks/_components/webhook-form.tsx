@@ -1,6 +1,6 @@
 "use client"
 
-import { createWebhook } from "@/actions/webhook-actions";
+import { createWebhook, updateWebhook } from "@/actions/webhook-actions";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -12,6 +12,8 @@ import { useForm } from "react-hook-form";
 
 import * as z from "zod";
 import { EventTypeSelector } from "./event-type-selector";
+import { ActionResponse } from "@/actions/action-response";
+import { handleActionResponse } from "@/actions/handler";
 
 const webhookFormSchema = z.object({
     name: z.string().min(1, {
@@ -35,9 +37,7 @@ export function WebhookForm({
 }: TitleFormProps) {
     const router = useRouter();
 
-    const [isEditing, setIsEditing] = useState(false);
-
-    const [selectedEventTypes, setSelectedEventTypes] = useState<string[]>([])
+    const [selectedEventTypes, setSelectedEventTypes] = useState<string[]>(initialData?.event_types || [])
 
     const addEventType = (eventType: string) => setSelectedEventTypes((current) => [...current, eventType]);
     const removeEventType = (eventType: string) => setSelectedEventTypes((current) => current.filter((name) => name !== eventType));
@@ -55,9 +55,19 @@ export function WebhookForm({
     const { isSubmitting, isValid } = form.formState;
 
     const onSubmit = async (values: z.infer<typeof webhookFormSchema>) => {
-        const webhook = {...values, event_types: eventTypes}
-        const response = await createWebhook(webhook)
-        console.log(response)
+        const webhook = {...values, event_types: selectedEventTypes};
+
+        let response: ActionResponse;
+
+        if (isUpdating)
+            response = await updateWebhook(initialData!.id!, webhook);
+        else
+            response = await createWebhook(webhook);
+
+        const success = handleActionResponse(response);
+
+        if (success)
+            router.refresh();
     }
 
     return (
@@ -95,7 +105,7 @@ export function WebhookForm({
                             <FormItem>
                                 <FormControl>
                                     <Input
-                                        disabled={isUpdating || isSubmitting}
+                                        disabled={isSubmitting}
                                         placeholder="Ex: http://endpoints-svc/cart"
                                         {...field}
                                     />
@@ -112,13 +122,26 @@ export function WebhookForm({
                         onAdd={addEventType}
                         onRemove={removeEventType}    
                     />
-                    <div className="flex items-center gap-x-2">
-                        <Button
-                            disabled={!isValid || isSubmitting}
-                            type="submit"
-                        >
-                            Save
-                        </Button>
+                    <div className="flex gap-4">
+                        <div className="flex items-center gap-x-2">
+                            <Button
+                                disabled={!isValid || isSubmitting || selectedEventTypes.length === 0}
+                                type="submit"
+                                >
+                                Save
+                            </Button>
+                        </div>
+                        {isUpdating && (
+                            <div className="flex items-center gap-x-2">
+                                <Button
+                                    disabled={!isValid || isSubmitting}
+                                    variant={"outline"}
+                                    onClick={resetForm}
+                                >
+                                    Clear
+                                </Button>
+                            </div>
+                        )}
                     </div>
                 </form>
             </Form>

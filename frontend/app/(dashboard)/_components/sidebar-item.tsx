@@ -18,8 +18,6 @@ export default function SidebarItem({
     const pathname = usePathname();
     const router = useRouter();
 
-    console.log(pathname, href)
-
     const isActive =
         pathname === href ||
         pathname?.startsWith(`${href}`);

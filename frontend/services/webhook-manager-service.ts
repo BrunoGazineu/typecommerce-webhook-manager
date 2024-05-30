@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios, { AxiosError, AxiosResponse } from "axios"
 
 const baseUrl = process.env.WEBHOOK_MANAGER_API_URL
 
@@ -9,28 +9,43 @@ type WebhookManagerOptions = {
     id?: number
 }
 
+type Response = {
+    success: boolean
+    data?: any
+}
+
 function createUrl(path: string, id?: number) {
     return `${baseUrl}/api/${path}${id ? `/${id}` : ''}`
 }
 
-async function get(options: WebhookManagerOptions) : Promise<any> {
-    const response = await axios.get(createUrl(options.resource, options.id))
-    return response.data;
+const handleRequest = async (promise: Promise<AxiosResponse>) : Promise<Response> => {
+    try {
+        const response = await promise;
+        return {success: true, data: response.data}
+    }
+    catch (error) {
+        return {success: false, data: error}
+    }
 }
 
-async function remove(options: WebhookManagerOptions & { id: number}) : Promise<any> {
-    const response = await axios.delete(createUrl(options.resource, options.id))
-    return response.data;
+async function get(options: WebhookManagerOptions) : Promise<Response> {
+    const response = axios.get(createUrl(options.resource, options.id))
+    return await handleRequest(response);
 }
 
-async function post(options: WebhookManagerOptions & { body: Object }) : Promise<any> {
-    const response = await axios.post(createUrl(options.resource, options.id), options.body);
-    return response.data;
+async function remove(options: WebhookManagerOptions & { id: number}) : Promise<Response> {
+    const response = axios.delete(createUrl(options.resource, options.id))
+    return await handleRequest(response);
 }
 
-async function patch(options: WebhookManagerOptions & { id: number, body: Object }) : Promise<any> {
-    const response = await axios.patch(createUrl(options.resource, options.id), options.body);
-    return  response.data;
+async function post(options: WebhookManagerOptions & { body: Object }) : Promise<Response> {
+    const response = axios.post(createUrl(options.resource, options.id), options.body);
+    return await handleRequest(response);
+}
+
+async function patch(options: WebhookManagerOptions & { id: number, body: Object }) : Promise<Response> {
+    const response = axios.patch(createUrl(options.resource, options.id), options.body);
+    return await handleRequest(response);
 }
 
 const webhookManager = {get, remove, post, patch}
