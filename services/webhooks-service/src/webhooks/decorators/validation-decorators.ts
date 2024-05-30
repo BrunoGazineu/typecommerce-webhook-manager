@@ -21,7 +21,7 @@ export function IsUnique(model: any, validationOptions?: ValidationOptions) {
     }
 }
 
-export function IsValidEventTypes(model: typeof EventTypeModel, validationOptions?: ValidationOptions) {
+export function IsValidEventTypes(model: typeof EventTypeModel, message: string, validationOptions?: ValidationOptions) {
     return function(object: Object, propertyName: string) {
         registerDecorator({
             name: "isValidEventTypes",
@@ -36,7 +36,7 @@ export function IsValidEventTypes(model: typeof EventTypeModel, validationOption
                     return true;
                 },
                 defaultMessage(args: ValidationArguments) {
-                    return `${args.property} has invalid event types`;
+                    return message;
                 }
             }
         })

@@ -11,6 +11,6 @@ export class CreateWebhookDto {
     @IsNotEmpty()
     url: string
 
-    @IsValidEventTypes(EventTypeModel)
+    @IsValidEventTypes(EventTypeModel, "Webhook has invalid Event Types")
     event_types: string[]
 }

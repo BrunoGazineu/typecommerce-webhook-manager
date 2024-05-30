@@ -10,5 +10,7 @@ export default async function Webhooks() {
         resource: "event-types"
     })
 
+    eventTypes.data.push({id: 12, name: "NOT_AN_EVENT"})
+
     return <WebhookViewer webhooks={webhooks.data} eventTypes={eventTypes.data.map((eventType: any) => eventType.name)}/>
 }

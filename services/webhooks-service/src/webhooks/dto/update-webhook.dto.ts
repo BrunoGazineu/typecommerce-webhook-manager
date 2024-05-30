@@ -9,6 +9,6 @@ export class UpdateWebhookDto {
     url: string
 
     @IsDefined()
-    @IsValidEventTypes(EventTypeModel)
+    @IsValidEventTypes(EventTypeModel, "Webhook has invalid Event Types")
     event_types: string[]
 }
