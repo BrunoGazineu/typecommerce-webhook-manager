@@ -11,9 +11,9 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import * as z from "zod";
-import { EventTypeSelector } from "./event-type-selector";
 import { ActionResponse } from "@/actions/action-response";
 import { handleActionResponse } from "@/actions/handler";
+import { EventTypeSelector } from "@/components/event-type-selector";
 
 const webhookFormSchema = z.object({
     name: z.string().min(1, {

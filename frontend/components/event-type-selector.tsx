@@ -1,7 +1,6 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { transform } from "next/dist/build/swc"
 import { useEffect, useState } from "react"
 import { X } from "lucide-react"
 
@@ -108,7 +107,7 @@ export function EventTypeSelector({
                     `${isBeingHovered ? "cursor-grabbing" : ""}`
                 )}>
                 {isBeingHovered && <div className="absolute top-0 left-0 h-full w-full opacity-40 bg-slate-400 z-50"></div>}
-                {selectedEventTypes.length === 0 && <div className="py-2 px-3 whitespace-nowrap text-sm text text-gray-500 cursor-default">Drag and drop here</div>}
+                {selectedEventTypes.length === 0 && <div className="py-2 px-3 whitespace-nowrap text-sm text text-gray-500 cursor-default col-span-2">Drag and drop here</div>}
                 {selectedEventTypes.map(eventType => <EventType key={eventType} name={eventType} onHold={()=>{}} onRelease={()=>{}} onRemove={onRemove} />)}
             </div>
 
@@ -122,7 +121,7 @@ export function EventTypeSelector({
                         onRelease={()=>setHeldedEventType("")}
                         onRemove={()=>{}}
                         canBeHeld={true}
-                    /> : <></>
+                    /> : <div key={eventType} className="hidden"></div>
                 ))}
             </div>
         </div>
