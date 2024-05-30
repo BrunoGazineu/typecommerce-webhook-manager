@@ -24,7 +24,7 @@ export default function EventDeliveryForm({
 
     const submit = async () => {
         const response = await sendEvent({
-            event_type: "eventType",
+            event_type: eventType,
             message: message
         });
 

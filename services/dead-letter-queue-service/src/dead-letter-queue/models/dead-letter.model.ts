@@ -9,6 +9,9 @@ export class DeadLetterModel {
     @Prop({ type: Object })
     event: WebhookEvent;
 
+    @Prop({ type: Date, default: Date.now })
+    created: Date
+
     @Prop({ type: Object })
     error: any;
 }

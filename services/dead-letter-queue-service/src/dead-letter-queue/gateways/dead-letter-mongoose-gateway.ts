@@ -46,6 +46,6 @@ export class DeadLetterMongooseGateway implements IGateway<DeadLetter> {
         throw new Error("Method not implemented.");
     }
     private modelToEntity(model: DeadLetterModel & { _id: Types.ObjectId }) {
-        return new DeadLetter(model._id.toString(), model.event, model.error);
+        return new DeadLetter(model._id.toString(), model.event, model.created, model.error);
     }
 }

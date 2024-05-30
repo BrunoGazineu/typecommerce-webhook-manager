@@ -2,7 +2,7 @@
 
 import webhookManager from "@/services/webhook-manager-service";
 import { Webhook } from "@/types/webhook";
-import { ActionResponse } from "./action-response";
+import { ActionResponse, handleRequest } from "./action-response";
 
 export async function createWebhook(webhook: Webhook) : Promise<ActionResponse> {
     const response = await webhookManager.post({
@@ -10,10 +10,7 @@ export async function createWebhook(webhook: Webhook) : Promise<ActionResponse> 
         body: webhook
     })
 
-    if (response.success)
-        return {result: "success", message: "Webhook Created"}
-
-    return {result: "error", message: response.data?.response?.data?.message[0] || "Unexpected error"};
+    return handleRequest(response, "Webhook Created");
 }
 
 export async function updateWebhook(id: number, webhook: Webhook) : Promise<ActionResponse> {
@@ -22,8 +19,7 @@ export async function updateWebhook(id: number, webhook: Webhook) : Promise<Acti
         id,
         body: webhook
     })
-    if (response.success)
-        return {result: "success", message: "Webhook Updated"}
 
-    return {result: "error", message: response.data?.response?.data?.message[0] || "Unexpected error"};
+
+    return handleRequest(response, "Webhook Updated");
 }

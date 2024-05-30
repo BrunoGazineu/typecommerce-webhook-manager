@@ -6,12 +6,14 @@ import { init } from "next/dist/compiled/webpack/webpack";
 
 interface JsonEditorProps {
     initialData?: Object
-    onChange: (json: Object) => void
+    onChange?: (json: Object) => void
+    editable?: boolean
 }
 
 export function JsonEditor({
     initialData,
-    onChange
+    onChange = (json)=>{},
+    editable=true
 }: JsonEditorProps) {
     const [isInitialized, setIsInitialized] = useState(false);
     const editorRef = useRef<any>(null);
@@ -24,9 +26,8 @@ export function JsonEditor({
         if (isInitialized) return;
         const initEditor = async() => {
             const JSONEditor: any = await import("jsoneditor")
-            const editor = new JSONEditor.default(editorRef.current, {})
+            const editor = new JSONEditor.default(editorRef.current, {mode: editable ? "tree" : "view", mainMenuBar: false})
             editorRef.current.jsonEditor = editor;
-
             
             editorRef.current.jsonEditor.options.onChange = () => {
                 const updatedJsonData = editorRef.current.jsonEditor.get();
