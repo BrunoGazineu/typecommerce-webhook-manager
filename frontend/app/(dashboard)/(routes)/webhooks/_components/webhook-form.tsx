@@ -1,6 +1,6 @@
 "use client"
 
-import { createWebhook, updateWebhook } from "@/actions/webhook-actions";
+import { createWebhook, deleteWebhook, updateWebhook } from "@/actions/webhook-actions";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -70,6 +70,13 @@ export function WebhookForm({
             router.refresh();
     }
 
+    const removeWebhook = async () => {
+        const response = await deleteWebhook(initialData?.id!);
+        const success = handleActionResponse(response)
+        if (success)
+            router.refresh()
+    }
+
     return (
         <div className="mt-6 border bg-slate-100 rounded-md p-4">
             <Form {...form}>
@@ -132,15 +139,26 @@ export function WebhookForm({
                             </Button>
                         </div>
                         {isUpdating && (
-                            <div className="flex items-center gap-x-2">
-                                <Button
-                                    disabled={!isValid || isSubmitting}
-                                    variant={"outline"}
-                                    onClick={resetForm}
-                                >
-                                    Clear
-                                </Button>
-                            </div>
+                            <>
+                                <div className="flex items-center gap-x-2">
+                                    <Button
+                                        disabled={!isValid || isSubmitting}
+                                        variant={"outline"}
+                                        onClick={resetForm}
+                                    >
+                                        Clear
+                                    </Button>
+                                </div>
+                                <div className="flex items-center gap-x-2">
+                                    <Button
+                                        disabled={!isValid || isSubmitting}
+                                        variant={"destructive"}
+                                        onClick={removeWebhook}
+                                    >
+                                        Delete
+                                    </Button>
+                                </div>
+                            </>
                         )}
                     </div>
                 </form>

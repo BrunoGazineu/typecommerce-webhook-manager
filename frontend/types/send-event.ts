@@ -1,4 +1,4 @@
-export interface WebhookEvent {
+export interface SendEvent {
     event_type: string;
     message: Object
 }

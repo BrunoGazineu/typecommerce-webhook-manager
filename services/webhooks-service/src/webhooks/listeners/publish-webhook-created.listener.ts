@@ -3,12 +3,13 @@ import { WebhookCreatedEvent } from "../events/webhook-created.event";
 import { ClientProxy } from "@nestjs/microservices";
 import { OnEvent } from "@nestjs/event-emitter";
 import { IPublisher } from "src/shared/publishers/publisher-interface";
+import { ConfigService } from "@nestjs/config";
 
 export class PublishWebhookCreatedListener {
     constructor(
         @Inject("WEBHOOKS_SERVICE")
         private publisher: IPublisher,
-        private readonly logger: Logger
+        private readonly logger: Logger,
     ){}
     
     @OnEvent('webhook.created')

@@ -28,6 +28,9 @@ export function DeadLetterItem({
                 URL: {deadLetter.event.url}
             </div>
             <div className="text-slate-500 text-sm py-3">
+                Created: {new Date(deadLetter.created).toLocaleDateString("pt-BR", {hour: "2-digit", minute: "2-digit", second: "2-digit"})}
+            </div>
+            <div className="text-slate-500 text-sm py-3">
                 Event: {deadLetter.event.method}
             </div>
 

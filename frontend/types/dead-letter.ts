@@ -1,6 +1,7 @@
 export interface DeadLetter {
     id: number
     event: WebhookEvent
+    created: Date
     error: Object
 }
 

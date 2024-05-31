@@ -20,6 +20,14 @@ export async function updateWebhook(id: number, webhook: Webhook) : Promise<Acti
         body: webhook
     })
 
-
     return handleRequest(response, "Webhook Updated");
+}
+
+export async function deleteWebhook(id: number) : Promise<ActionResponse> {
+    const response = await webhookManager.remove({
+        resource: "webhooks",
+        id
+    })
+
+    return handleRequest(response, "Webhook Deleted")
 }

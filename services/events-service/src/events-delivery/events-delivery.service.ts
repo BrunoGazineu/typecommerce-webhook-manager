@@ -25,9 +25,7 @@ export class EventsDeliveryService {
 
     async send(sendEventDto: SendEventDto) {
         this.logger.log(`[EventDelivery] Delivering ${sendEventDto.event_type} event`);
-        console.log(sendEventDto)
         const webhooks = await this.webhooksGateway.findAllByEventType(sendEventDto.event_type);
-        console.log(webhooks)
         if (!webhooks)
             throw new HttpException("No webhook found with event: " + sendEventDto.event_type, HttpStatus.BAD_REQUEST);
         
@@ -36,7 +34,6 @@ export class EventsDeliveryService {
     }
 
     public async processEventDelivery(webhookEvent: WebhookEvent) {
-        console.log("Starting processing")
         let lastResponse: DeliveryResponse;
         for (let retries = 0; retries < this.configService.get("DELIVERY_RETRIES"); retries++) {
             lastResponse = await this.deliveryService.deliver(webhookEvent);

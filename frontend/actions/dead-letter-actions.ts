@@ -11,7 +11,5 @@ export async function deadLetterRetry(id: number, webhookEvent: WebhookEvent) {
         body: webhookEvent
     })
 
-    console.log(response)
-
     return handleRequest(response, "Event Retried Succesfully") 
 }
