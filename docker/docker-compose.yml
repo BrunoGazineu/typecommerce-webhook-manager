@@ -74,3 +74,11 @@ services:
       - 7003:80
     depends_on:
       - postgres
+
+  frontend-app:
+    image: bsgazineu/frontend-app:latest
+    build:
+      context: ../frontend
+      dockerfile: ./Dockerfile
+    ports:
+      - 3000:3000
