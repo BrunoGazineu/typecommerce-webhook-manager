@@ -13,3 +13,12 @@ export async function deadLetterRetry(id: number, webhookEvent: WebhookEvent) {
 
     return handleRequest(response, "Event Retried Succesfully") 
 }
+
+export async function deadLetterDelete(id: number) {
+    const response = await webhookManager.remove({
+        resource: "dead-letter-queue",
+        id,
+    })
+
+    return handleRequest(response, "Event Retried Succesfully") 
+}

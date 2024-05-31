@@ -4,13 +4,13 @@ import { EventTypeModel } from "src/event-types/models/event-type.model"
 import { WebhookModel } from "../models/webhook.model"
 
 export class CreateWebhookDto {
-    @IsUnique(WebhookModel)
+    // @IsUnique(WebhookModel) 
     @IsNotEmpty()
     name: string
 
     @IsNotEmpty()
     url: string
 
-    @IsValidEventTypes(EventTypeModel, "Webhook has invalid Event Types")
+    // @IsValidEventTypes(EventTypeModel, "Webhook has invalid Event Types") Webhooks customizados que não achei forma de injetar
     event_types: string[]
 }

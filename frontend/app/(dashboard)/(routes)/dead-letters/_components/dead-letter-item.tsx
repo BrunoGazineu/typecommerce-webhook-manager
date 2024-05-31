@@ -1,6 +1,6 @@
 "use client"
 
-import { deadLetterRetry } from "@/actions/dead-letter-actions";
+import { deadLetterDelete, deadLetterRetry } from "@/actions/dead-letter-actions";
 import { handleActionResponse } from "@/actions/handler";
 import { JsonEditor } from "@/components/json-editor";
 import { Button } from "@/components/ui/button";
@@ -20,6 +20,14 @@ export function DeadLetterItem({
 
         if (success)
             router.refresh();
+    }
+
+    const remove = async () => {
+        const response = await deadLetterDelete(deadLetter.id)
+        const success = handleActionResponse(response)
+
+        if (success)
+            router.refresh()
     }
 
     return (
@@ -52,7 +60,7 @@ export function DeadLetterItem({
                 </Button>
                 <Button
                     className="mt-4"
-                    onClick={retry}
+                    onClick={remove}
                     variant="destructive"
                 >
                     Remove

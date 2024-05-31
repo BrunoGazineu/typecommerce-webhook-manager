@@ -34,17 +34,18 @@ export class EventsDeliveryService {
     }
 
     public async processEventDelivery(webhookEvent: WebhookEvent) {
-        let lastResponse: DeliveryResponse;
-        for (let retries = 0; retries < this.configService.get("DELIVERY_RETRIES"); retries++) {
-            lastResponse = await this.deliveryService.deliver(webhookEvent);
-            if (lastResponse.success) {
-                this.logger.log("[EventDelivery] Succesfully delivered to " + webhookEvent.url)
-                return
-            };
+        const retriesAttempts = +this.configService.get("DELIVERY_RETRIES");
+        const timeout = +this.configService.get("TIMEOUT");
+        const response: DeliveryResponse = await this.deliveryService.deliver(webhookEvent, retriesAttempts, timeout);
+
+        if (response.success) {
+            this.logger.log("[EventDelivery] Succesfully delivered to " + webhookEvent.url)
+            return
         }
 
-        const deadLetter = new DeadLetter(webhookEvent, lastResponse.error);
+        const deadLetter = new DeadLetter(webhookEvent, response.error);
 
         this.eventEmitter.emit('delivery.error', new DeliveryErrorEvent(deadLetter))
+
     }
 }

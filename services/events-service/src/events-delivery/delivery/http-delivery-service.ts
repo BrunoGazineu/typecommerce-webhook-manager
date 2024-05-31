@@ -5,6 +5,7 @@ import { catchError, firstValueFrom } from "rxjs";
 import { HttpException, Injectable, Logger } from "@nestjs/common";
 import { AxiosError } from "axios";
 import * as HttpClient from "@effect/platform/HttpClient"
+import { Effect, pipe, Schedule } from "effect";
 
 @Injectable()
 export class HttpDeliveryService implements IDeliveryService {
@@ -13,9 +14,9 @@ export class HttpDeliveryService implements IDeliveryService {
         private readonly logger: Logger
     ) {}
 
-    async deliver(webhookEvent: WebhookEvent): Promise<DeliveryResponse> {
+    async deliver(webhookEvent: WebhookEvent, retries: number = 0, timeout?: 10_000): Promise<DeliveryResponse> {
         const {url, ...data} = webhookEvent;
-        const serviceObservable = this.httpService.post(webhookEvent.url, {...data})
+        const serviceObservable = this.httpService.post(webhookEvent.url, {...data}, {timeout})
             .pipe(
                 catchError((error: AxiosError) => {
                     this.logger.error("[Delivery] Error delivering event to: " + url);
@@ -23,17 +24,26 @@ export class HttpDeliveryService implements IDeliveryService {
                 })
             );
         
-        try {
-            const response = await firstValueFrom(serviceObservable);
-            if (response.status < 300 && response.status >= 200)
-                return {success: true}
+        const effect = Effect.tryPromise({
+            try: () => firstValueFrom(serviceObservable),
+            catch: (error: HttpException) => new HttpException(error.message, error.getStatus())
+        });
 
-            return {success: false, error: {status: response.status, data: response.data}}
+        const retryEffect = pipe(
+            effect,
+            Effect.retry(pipe(
+                Schedule.recurs(retries),
+                Schedule.addDelay(()=>1000)
+            )),
+        );
+
+        try {
+            const response = await Effect.runPromise(retryEffect);
+            return {success: true}
 
         } catch (error: unknown) {
             if (error instanceof HttpException)
-                return { success: false, error: {status: error.getStatus(), data: error.getResponse()} }
-
+                return { success: false, error: {status: (error as HttpException).getStatus(), data: (error as HttpException).getResponse()} }
             return { success: false, error: error.toString() }
         }
     }

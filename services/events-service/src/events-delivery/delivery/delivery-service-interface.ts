@@ -6,5 +6,5 @@ export interface DeliveryResponse {
 }
 
 export interface IDeliveryService {
-    deliver(webhookEvent: WebhookEvent) : Promise<DeliveryResponse>;
+    deliver(webhookEvent: WebhookEvent, retries: number, timeout?: number) : Promise<DeliveryResponse>;
 } 

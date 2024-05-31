@@ -18,7 +18,7 @@ export class WebhookSequelizeRespository implements IRepository<Webhook> {
     ) {}
 
     async count(where: Attributes = {}): Promise<number> {
-        return this.eventTypeModel.count(where)
+        return this.webhookModel.count({where})
     }
 
     async findAll(): Promise<Webhook[]> {

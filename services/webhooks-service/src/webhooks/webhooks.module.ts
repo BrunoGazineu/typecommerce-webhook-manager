@@ -13,6 +13,7 @@ import { PublishWebhookUpdatedListener } from './listeners/publish-webhook-updat
 import { PublishWebhookDeletedListener } from './listeners/publish-webhook-deleted.listener';
 import { WebhooksSeedService } from './webhooks.seed.service';
 import { ConfigService } from '@nestjs/config';
+import { EventTypeSequelizeRespository } from 'src/event-types/repositories/event-type-sequelize-repository';
 
 @Module({
   imports: [
@@ -47,6 +48,11 @@ import { ConfigService } from '@nestjs/config';
     {
       provide: 'EventEmitter',
       useExisting: EventEmitter2
+    },
+    EventTypeSequelizeRespository,
+    {
+      provide: "EventTypeRepository",
+      useExisting: EventTypeSequelizeRespository
     }
   ],
 })

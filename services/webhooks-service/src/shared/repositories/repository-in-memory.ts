@@ -5,11 +5,11 @@ import { WebhookNotFoundException } from "../../webhooks/exceptions/webhook-not-
 @Injectable()
 export class RepositoryInMemory<T> implements IRepository<T> {
     async count(where?: Attributes): Promise<number> {
-        return this.items.length
+        return this.items.filter((item) => Object.entries(where).map(([attribute, value])=>item[attribute] == value).every(v=>Boolean(v))).length
     }
     items: T[] = []
 
-    async findAll(): Promise<T[]> {
+    async findAll(where = {}): Promise<T[]> {
         return this.items;
     }
     async findById(id: number): Promise<T> {

@@ -2,21 +2,37 @@ import { WebhooksService } from './webhooks.service';
 import { Webhook } from './entities/webhook.entity';
 import { RepositoryInMemory } from '../shared/repositories/repository-in-memory';
 import { WebhookNotFoundException } from './exceptions/webhook-not-found-exception';
+import { EventType } from 'src/event-types/entities/event-type.entity';
+import { HttpException } from '@nestjs/common';
 
-const eventEmitterMock = {
-  emit: jest.fn()
+class EventEmitterInMemory {
+  constructor(public events: {type: string, event: any}[] = []) {}
+  emit(type: string, event: any) {
+    this.events.push({type, event})
+  }
 }
 
 describe('WebhooksService', () => {
   let service: WebhooksService;
   let webhookRepository: RepositoryInMemory<Webhook>;
+  let eventTypeRepository: RepositoryInMemory<EventType>
+  let eventEmitter: EventEmitterInMemory
 
   beforeEach(async () => {
     webhookRepository = new RepositoryInMemory();
-    service = new WebhooksService(webhookRepository, eventEmitterMock as any);
+    eventTypeRepository = new RepositoryInMemory();
+    eventEmitter = new EventEmitterInMemory();
+    service = new WebhooksService(webhookRepository, eventTypeRepository, eventEmitter as any);
   });
 
   it('Should create a webhook', async () => {
+    const eventType: EventType = {
+      id: 1,
+      name: "TEST_EVENT"
+    }
+
+    eventTypeRepository.create(eventType)
+
     const webhookData = {
       url: "www.test.com",
       name: "Test Webhook",
@@ -28,7 +44,16 @@ describe('WebhooksService', () => {
     });
 
     expect(webhookRepository.items).toEqual([webhook])
+    expect(eventEmitter.events[0].event).toEqual({webhook: webhook})
   });
+
+  it('Should raise Unique Exception', async () => {
+    eventTypeRepository.items.push({id: 1, name: "TEST_EVENT"})
+
+    const webhook = createTestWebhook();
+    webhookRepository.items.push(webhook);
+    expect(service.create(webhook)).toThrow(HttpException);
+  })
 
   it('Should get all webhooks', async () => {
   
@@ -53,12 +78,25 @@ describe('WebhooksService', () => {
   })
 
   it('Should update a webhook by id', async () => {
+    const eventTypes: EventType[] = [{
+        id: 1,
+        name: "TEST_EVENT"
+      },
+      {
+        id: 2,
+        name: "TEST_EVENT_2"
+      },
+    ]
+
+    eventTypeRepository.createMany(eventTypes)
+
     webhookRepository.items.push(createTestWebhook());
 
-    const updateData = {name: "TEST_WEBHOOK_2", url: "www.test_2.com", event_types: ["TEST_EVENT", "TEST_EVENT_2"]};
+    const updateData = {url: "www.test_2.com", event_types: ["TEST_EVENT", "TEST_EVENT_2"]};
     const webhook = await service.update(1, updateData);
 
-    expect(webhook).toEqual(new Webhook(1, updateData.name, updateData.url, updateData.event_types));
+    expect(webhook).toEqual(new Webhook(1, "TEST_WEBHOOK", updateData.url, updateData.event_types));
+    expect(eventEmitter.events[0].event).toEqual({webhook: webhook})
   });
 
   it('Should delete a webhook by id', async () => {
@@ -67,6 +105,7 @@ describe('WebhooksService', () => {
     await service.remove(1);
 
     expect(webhookRepository.items.length).toEqual(0)
+    expect(eventEmitter.events[0].event).toEqual({id: 1})
   })
 });
 
