@@ -1,14 +1,14 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { IGateway } from "./gateway-interface";
 
 @Injectable()
-export class RepositoryInMemory<T> implements IGateway<T> {
+export class GatewayInMemory<T> implements IGateway<T> {
     items: T[] = []
 
     async findAll(where = {}): Promise<T[]> {
         return this.items;
     }
-    async findById(id: number): Promise<T> {
+    async findById(id: string): Promise<T> {
         const item = this.items.find((item: any)=> item.id === id)
         if (!item)
             throw new Error("Object not found");
@@ -32,7 +32,7 @@ export class RepositoryInMemory<T> implements IGateway<T> {
         Object.assign(item, model);
         return true;
     }
-    async deleteById(id: number): Promise<boolean> {
+    async deleteById(id: string): Promise<boolean> {
         const index = this.items.findIndex((item: any) => item.id === id);
         if (index === -1)
             throw new Error("Object not found");
