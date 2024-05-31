@@ -1,9 +1,12 @@
 import { Injectable, Logger } from "@nestjs/common";
-import { IRepository } from "./repository-interface";
+import { Attributes, IRepository } from "./repository-interface";
 import { WebhookNotFoundException } from "../../webhooks/exceptions/webhook-not-found-exception";
 
 @Injectable()
 export class RepositoryInMemory<T> implements IRepository<T> {
+    async count(where?: Attributes): Promise<number> {
+        return this.items.length
+    }
     items: T[] = []
 
     async findAll(): Promise<T[]> {

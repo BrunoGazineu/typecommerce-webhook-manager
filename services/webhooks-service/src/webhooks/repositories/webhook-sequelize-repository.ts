@@ -1,4 +1,4 @@
-import { IRepository } from "src/shared/repositories/repository-interface";
+import { Attributes, IRepository } from "src/shared/repositories/repository-interface";
 import { Webhook } from "../entities/webhook.entity";
 import { InjectModel } from "@nestjs/sequelize";
 import { WebhookModel } from "../models/webhook.model";
@@ -16,6 +16,10 @@ export class WebhookSequelizeRespository implements IRepository<Webhook> {
         private readonly sequelize: Sequelize,
         private readonly logger: Logger
     ) {}
+
+    async count(where: Attributes = {}): Promise<number> {
+        return this.eventTypeModel.count(where)
+    }
 
     async findAll(): Promise<Webhook[]> {
         const webhooks = await this.webhookModel.findAll({ include: EventTypeModel });

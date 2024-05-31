@@ -3,7 +3,7 @@ import { EventTypesService } from './event-types.service';
 import { EventTypesController } from './event-types.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { EventTypeModel } from './models/event-type.model';
-import { EventTypeSequelizeRespository } from './repositories/EventTypeSequelizeRepository';
+import { EventTypeSequelizeRespository } from './repositories/event-type-sequelize-repository';
 import { EventTypeSeedService } from './event-types.seed.service';
 
 @Module({

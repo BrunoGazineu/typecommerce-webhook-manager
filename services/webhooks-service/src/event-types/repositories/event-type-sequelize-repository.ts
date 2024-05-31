@@ -1,4 +1,4 @@
-import { IRepository } from "src/shared/repositories/repository-interface";
+import { Attributes, IRepository } from "src/shared/repositories/repository-interface";
 import { EventType } from "../entities/event-type.entity";
 import { EventTypeModel } from "../models/event-type.model";
 import { InjectModel } from "@nestjs/sequelize";
@@ -10,8 +10,12 @@ export class EventTypeSequelizeRespository implements IRepository<EventType> {
         private eventTypeModel: typeof EventTypeModel
     ) {}
 
-    async findAll(): Promise<EventType[]> {
-        const eventTypes = await this.eventTypeModel.findAll();
+    async count(where: Attributes = {}): Promise<number> {
+        return this.eventTypeModel.count(where)
+    }
+
+    async findAll(where: Attributes = {}): Promise<EventType[]> {
+        const eventTypes = await this.eventTypeModel.findAll({where});
         return eventTypes.map(
             (eventType) => new EventType(eventType.id, eventType.name)
         );

@@ -43,13 +43,21 @@ export function DeadLetterItem({
                 Error:
             </div>
             <JsonEditor initialData={deadLetter.error} editable={false}></JsonEditor>
-
-            <Button
-                className="mt-4"
-                onClick={retry}
-            >
-                Retry
-            </Button>
+            <div className="flex gap-2">
+                <Button
+                    className="mt-4"
+                    onClick={retry}
+                >
+                    Retry
+                </Button>
+                <Button
+                    className="mt-4"
+                    onClick={retry}
+                    variant="destructive"
+                >
+                    Remove
+                </Button>
+            </div>
         </div>
     )
 }
