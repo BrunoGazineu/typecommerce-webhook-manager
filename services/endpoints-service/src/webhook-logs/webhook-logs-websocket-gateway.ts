@@ -15,6 +15,7 @@ export class WebhookLogsWebsocketGateway implements OnGatewayConnection, OnGatew
     }
 
     sendNewWebhookLog(endpointId: number, webhookLog: WebhookLog) {
-        this.server.emit(`webhook_log_${endpointId}`, webhookLog)
+        console.log("Emitting")
+        this.server.emit(`webhook_log`, webhookLog)
     }
 }

@@ -1,6 +1,8 @@
 import webhookManager from "@/services/webhook-manager-service"
 import { WebhookViewer } from "./_components/webhook-viewer"
 
+export const dynamic = 'force-dynamic';
+
 export default async function Webhooks() {
     const webhooks = await webhookManager.get({
         resource: "webhooks"

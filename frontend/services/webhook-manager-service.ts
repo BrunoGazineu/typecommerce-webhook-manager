@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosResponse } from "axios"
 
 const baseUrl = process.env.WEBHOOK_MANAGER_API_URL
 
-type Resourses = "webhooks" | "events-delivery" | "dead-letter-queue" | "event-types" | "endpoints"
+type Resourses = "webhooks" | "events-delivery" | "dead-letter-queue" | "event-types" | "endpoints" | "webhooklogs"
 
 type WebhookManagerOptions = {
     resource: Resourses;
@@ -27,6 +27,10 @@ const handleRequest = async (promise: Promise<AxiosResponse>) : Promise<Response
         return {success: false, data: error}
     }
 }
+
+axios.defaults.headers.common['Cache-Control'] = 'no-cache';
+axios.defaults.headers.common['Pragma'] = 'no-cache';
+axios.defaults.headers.common['Expires'] = '0';
 
 async function get(options: WebhookManagerOptions) : Promise<Response> {
     const response = axios.get(createUrl(options.resource, options.id))

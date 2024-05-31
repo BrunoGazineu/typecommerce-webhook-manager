@@ -53,7 +53,7 @@ export function JsonEditor({
             <meta charSet="utf-8" />
             <link href="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/10.0.2/jsoneditor.min.css" rel="stylesheet" type="text/css" />
             <div ref={editorRef} style={{ width: '100%', height: '100%' }}></div>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/10.0.2/jsoneditor.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/10.0.2/jsoneditor.min.js" async></script>
         </div>
     )
 }

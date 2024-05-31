@@ -17,7 +17,7 @@ export class DeadLetterMongooseGateway implements IGateway<DeadLetter> {
         return true;
     }
     async findAll(): Promise<DeadLetter[]> {
-        const deadLetters = await this.deadLetterModel.find();
+        const deadLetters = await this.deadLetterModel.find().sort('-created');
         return deadLetters.map(
             deadLetter => this.modelToEntity(deadLetter)
         )

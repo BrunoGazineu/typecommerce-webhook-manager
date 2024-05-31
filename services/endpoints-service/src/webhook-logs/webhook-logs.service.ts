@@ -15,10 +15,11 @@ export class WebhookLogsService
   ) {}
   async create(createWebhookLogDto: CreateWebhookLogDto) {
     const webhookLog = await this.webhookLogModel.create(createWebhookLogDto);
+    webhookLog.$get("endpoint")
     this.webhookLogsWebsocketGateway.sendNewWebhookLog(createWebhookLogDto.endpointId, webhookLog)
   }
 
-  async getByLimit(limit: number = 15) {
-    return this.webhookLogModel.findAll({limit: limit});
+  async getByLimit(limit: number) {
+    return this.webhookLogModel.findAll({limit: limit, include: "endpoint", order: [["createdAt", "DESC"]]});
   }
 }
