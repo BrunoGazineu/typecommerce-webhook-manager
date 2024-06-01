@@ -18,7 +18,7 @@ docker compose up -d
 #### Obs:
 Se estiver em um sistema windows, deve ser necessário modificar o arquivo docker/docker-entrypoint-initdb.d/init-multiple-databases.sh para o fim de linha "LF".
 
-No VSCode po ser feito aqui:
+No VSCode pode ser feito aqui:
 
 ![image](https://github.com/BrunoGazineu/typecommerce-webhook-manager/assets/107951111/ffabab60-4c2f-40d3-b4fe-c7dda449c8fe)
 
